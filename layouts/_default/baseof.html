@@ -3,11 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    {{- $title := .Title -}}
+    {{- if .IsHome -}}
+        {{- $title = .Site.Title -}}
+    {{- else -}}
+        {{- $title = printf "%s | %s" $title .Site.Title -}}
+    {{- end -}}
+    <title>{{ $title }}</title>
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="twitter:title" content="{{ $title }}">
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
     <meta property="og:image" content="{{ "images/WP.jpg" | absURL }}">
+    <meta property="twitter:image" content="{{ "images/WP.jpg" | absURL }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Patcheados">
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+    <meta name="twitter:card" content="summary_large_image">
     {{- $description := "O Patcheados é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos." -}}
     {{- if and (eq .Type "games") .IsPage -}}
         {{- $description = printf "Patches de tradução para %s." .Title -}}
@@ -19,6 +30,7 @@
     <link rel="icon" href="{{ "images/favicon.png" | relURL }}" type="image/png">
     {{- $style := resources.Get "css/style.css" | minify | fingerprint -}}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+    <link rel="canonical" href="{{ .Permalink }}">
 </head>
 <body>
     {{ partial "header.html" . -}}
