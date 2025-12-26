@@ -1,28 +1,28 @@
 <header>
-    <h1><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></h1>
+    <h1><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
     <nav>
-        <a href="{{ "/" | relURL }}">
-            <img src="/svg/ui/house.svg" alt="">
+        <a href="{{ .Site.BaseURL }}">
+            <img src="{{ "/svg/ui/house.svg" | relURL }}" alt="">
             <span>Início</span>
         </a>
         <a href="{{ "Jogos" | relURL }}">
-            <img src="/svg/ui/gamepad-2.svg" alt="">
+            <img src="{{ "svg/ui/gamepad-2.svg" | relURL }}" alt="">
             <span>Jogos</span>
         </a>
         <a href="{{ "Autores" | relURL }}">
-            <img src="/svg/ui/users-round.svg" alt="">
+            <img src="{{ "svg/ui/users-round.svg" | relURL }}" alt="">
             <span>Autores</span>
         </a>
         <a href="{{ "Circulos" | relURL }}">
-            <img src="/svg/ui/handshake.svg" alt="">
+            <img src="{{ "svg/ui/handshake.svg" | relURL }}" alt="">
             <span>Circulos</span>
         </a>
         <a href="{{ "Recursos" | relURL }}">
-            <img src="/svg/ui/files.svg" alt="">
+            <img src="{{ "svg/ui/files.svg" | relURL }}" alt="">
             <span>Recursos</span>
         </a>
         <a href="{{ "FAQ" | relURL }}">
-            <img src="/svg/ui/circle-question-mark.svg" alt="">
+            <img src="{{ "svg/ui/circle-question-mark.svg" | relURL }}" alt="">
             <span>FAQ</span>
         </a>
     </nav>
