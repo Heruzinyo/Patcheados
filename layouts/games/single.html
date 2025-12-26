@@ -4,7 +4,7 @@
 <div class="content">
     <aside class="sidebar">
         <div class="card">
-            <img src="/games/{{ .File.BaseFileName }}/grid.jpg" alt="Capa de {{ .Title }}" class="game-image">
+            <img src="{{ printf "games/%s/grid.jpg" .File.BaseFileName | relURL }}" alt="Capa de {{ .Title }}" class="game-image">
             {{- if .Params.platforms }}
             <div class="platform-icons">
                 {{ $data := $.Site.Data.icon -}}
@@ -13,14 +13,14 @@
                 {{- $plat := index $data.platforms . -}}
                 {{- $code := $plat.code -}}
             
-                <img src="/svg/platforms/{{ $code }}.svg" alt="{{ . }}" title="{{ . }}">
+                <img src="{{ printf "svg/platforms/%s.svg" $code | relURL }}" alt="{{ . }}" title="{{ . }}">
                 {{ end -}}
             </div>
             {{- end }}
         </div>
         {{- if .Params.nsfw }}
         <div class="warning-box">
-            <img src="/svg/ui/triangle-alert.svg" alt="" class="warning-icon">
+            <img src="{{ "svg/ui/triangle-alert.svg" | relURL }}" alt="" class="warning-icon">
             <span>Esse jogo pode conter conteúdo sensível ou não ser adequado para visualização no trabalho.</span>
         </div>
         {{ end }}
@@ -43,7 +43,7 @@
                 <h3 class="section-title">Tags</h3>
                 <div class="tags">
                     {{- range .Params.tags }}
-                    <a href="/Jogos/?q=tag:{{ . | urlquery }}" class="tag tag-search">{{ . }}</a>
+                    <a href="{{ printf "Jogos/?q=tag:%s" (. | urlquery) | relURL }}" class="tag tag-search">{{ . }}</a>
                     {{- end }}
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     {{- $icon := index site.Data.icon.services .name -}}
                     {{- $code := $icon.code }}
                     <a href="{{ .url }}" target="_blank" class="btn">
-                        <img src="/svg/services/{{ $code }}.svg" alt="">
+                        <img src="{{ printf "svg/services/%s.svg" $code | relURL }}" alt="">
                         {{ .name }}
                     </a>
                     {{- end }}

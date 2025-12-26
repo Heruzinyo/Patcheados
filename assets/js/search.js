@@ -24,7 +24,7 @@ class SearchSystem {
   }
 
   async init() {
-    this.pagefind = await import("/pagefind/pagefind.js");
+    this.pagefind = await import("../pagefind/pagefind.js");
     await this.pagefind.init();
     this.createNoResultsMessage();
     this.createPaginationContainer();

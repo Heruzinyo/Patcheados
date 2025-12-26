@@ -14,7 +14,7 @@
   {{- end -}}
 {{- end -}}
 {{- if eq $type "games" -}}
-  {{- $image = printf "/games/%s/grid.jpg" $page.File.BaseFileName -}}
+  {{- $image = printf "games/%s/grid.jpg" $page.File.BaseFileName | relURL -}}
   {{- $filters = merge $filters (dict "type" "game") -}}
   {{- $allPatches := where $site.RegularPages "Type" "patches" -}}
   {{- $gamePatches := where $allPatches ".Params.game" $page.File.BaseFileName -}}
@@ -176,9 +176,9 @@
 {{- else if eq $type "authors" -}}
   {{- $avatarPath := printf "static/authors/%s.jpg" $page.File.BaseFileName -}}
   {{- if fileExists $avatarPath -}}
-    {{- $image = printf "/authors/%s.jpg" $page.File.BaseFileName -}}
+    {{- $image = printf "authors/%s.jpg" $page.File.BaseFileName | relURL -}}
   {{- else -}}
-    {{- $image = "/images/def-author.png" -}}
+    {{- $image = "images/def-author.png" | relURL -}}
   {{- end -}}
   {{- $filters = merge $filters (dict "type" "author") -}}
   {{- $allPatches := where $site.RegularPages "Type" "patches" -}}
@@ -219,9 +219,9 @@
 {{- else if eq $type "circles" -}}
   {{- $logoPath := printf "static/circles/%s.png" $page.File.BaseFileName -}}
   {{- if fileExists $logoPath -}}
-    {{- $image = printf "/circles/%s.png" $page.File.BaseFileName -}}
+    {{- $image = printf "circles/%s.png" $page.File.BaseFileName | relURL -}}
   {{- else -}}
-    {{- $image = "/images/def-circle.png" -}}
+    {{- $image = "images/def-circle.png" | relURL -}}
   {{- end -}}
   {{- $filters = merge $filters (dict "type" "circle") -}}
   {{- $allPatches := where $site.RegularPages "Type" "patches" -}}

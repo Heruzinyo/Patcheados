@@ -9,7 +9,7 @@
 {{- range $warnings -}}
   {{- if index $.Params .key }}
     <div class="warning-box">
-      <img src="/svg/ui/info.svg" alt="" class="warning-icon">
+      <img src="{{ "svg/ui/info.svg" | relURL }}" alt="" class="warning-icon">
       <span>{{ .msg }}</span>
     </div>
   {{- end -}}
@@ -28,7 +28,7 @@
             {{- range .Params.platforms -}}
                 {{- $plat := index $data.platforms . -}}
                 {{ $code := $plat.code }}
-                <img src="/svg/platforms/{{ $code }}.svg" alt="{{ . }}" title="{{ . }}">
+                <img src="{{ printf "svg/platforms/%s.svg" $code | relURL }}" alt="{{ . }}" title="{{ . }}">
             {{- end }}
         </div>
         {{- end -}}
@@ -65,7 +65,7 @@
           {{- $provData := index $data.services $provName -}}
           {{- $code := $provData.code -}}
 
-          {{- $iconURL := printf "/svg/services/%s.svg" $code -}}
+          {{- $iconURL := printf "svg/services/%s.svg" $code -}}
 
           {{- $type := .type | default "standard" -}}
           {{- $provider := or $provData.name ($provName | title) -}}
@@ -113,7 +113,7 @@
 
           {{- $text := printf "%s: %s" $platformText $providerText }}
           <a href="{{ .url }}" target="_blank" class="btn btn-download" data-platform="{{ $platform }}">
-            <img src="{{ $iconURL }}" class="download-icon">
+            <img src="{{ $iconURL | relURL }}" class="download-icon">
             <div class="download-text">
               <span>{{ $text }}</span>
               {{- if .format }}
@@ -215,9 +215,9 @@
         {{- $provData := index $data.services $provName -}}
         {{- $code := $provData.code -}}
 
-        {{- $iconURL := printf "/svg/services/%s.svg" $code }}
+        {{- $iconURL := printf "svg/services/%s.svg" $code }}
         <a href="{{ .url }}" target="_blank" class="btn btn-patch-resource">
-          <img src="{{ $iconURL }}" class="patch-resource-icon" alt="{{ $provName }}">
+          <img src="{{ $iconURL | relURL }}" class="patch-resource-icon" alt="{{ $provName }}">
           <div class="patch-resource-text">
             <span>{{ .name }}</span>
             {{- if .format }}
@@ -275,13 +275,13 @@
                         {{- $value := index $.Params . }}
                         <td>
                             {{- if eq $value true -}}
-                                <img src="/svg/ui/circle-check.svg" alt="" title="Traduzido" class="specs-icon specs-icon-yes">
+                                <img src="{{ "svg/ui/circle-check.svg" | relURL }}" alt="" title="Traduzido" class="specs-icon specs-icon-yes">
                             {{- else if eq $value false -}}
-                                <img src="/svg/ui/circle-x.svg" alt="" title="Não Traduzido" class="specs-icon specs-icon-no">
+                                <img src="{{ "svg/ui/circle-x.svg" | relURL }}" alt="" title="Não Traduzido" class="specs-icon specs-icon-no">
                             {{- else if eq $value "partial" -}}
-                                <img src="/svg/ui/circle-dot.svg" alt="" title="Parcialmente Traduzido" class="specs-icon specs-icon-partial">
+                                <img src="{{ "svg/ui/circle-dot.svg" | relURL }}" alt="" title="Parcialmente Traduzido" class="specs-icon specs-icon-partial">
                             {{- else -}}
-                                <img src="/svg/ui/circle-minus.svg" alt="" title="Indisponível" class="specs-icon">
+                                <img src="{{ "svg/ui/circle-minus.svg" | relURL }}" alt="" title="Indisponível" class="specs-icon">
                             {{- end -}}
                         </td>
                     {{- end }}
@@ -414,7 +414,7 @@
                     {{ if fileExists $avatarPath }}
                       <img src="{{ printf "authors/%s" $avatarFilename | relURL }}" alt="Foto de Perfil de {{ $page.Title }}" loading="lazy">
                     {{- else }}
-                      <img src="/images/def-author.png" alt="Foto de Perfil Padrão" loading="lazy">
+                      <img src="{{ "images/def-author.png" | relURL }}" alt="Foto de Perfil Padrão" loading="lazy">
                     {{- end }}
                     <div class="user-card-info">
                       <span class="user-card-name">{{ $page.Title }}</span>

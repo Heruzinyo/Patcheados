@@ -10,7 +10,7 @@
                 {{ if fileExists $avatarPath }}
                   <img src="{{ printf "authors/%s" $avatarFilename | relURL }}" alt="Foto de Perfil de {{ .Title }}" class="author-avatar">
                 {{- else }}
-                  <img src="/images/def-author.png" alt="Foto de Perfil Padrão" class="author-avatar">
+                  <img src="{{ "images/def-author.png" | relURL }}" alt="Foto de Perfil Padrão" class="author-avatar">
                 {{- end }}
             </div>
             {{- if .Content }}
@@ -24,7 +24,7 @@
                 {{- $icon := index site.Data.icon.services .name -}}
                 {{- $code := $icon.code }}
                 <a href="{{ .url }}" target="_blank" class="btn">
-                    <img src="/svg/services/{{ $code }}.svg" alt="">
+                    <img src="{{ printf "svg/services/%s.svg" $code | relURL }}" alt="">
                     {{ .name }}
                 </a>
                 {{- end }}
@@ -48,7 +48,7 @@
                         {{ if fileExists $logoPath }}
                           <img src="{{ printf "circles/%s" $logoFilename | relURL }}" alt="Logo de {{ .Title }}" class="circle-logo">
                         {{- else }}
-                          <img src="/images/def-circle.png" alt="Logo Padrão" class="circle-logo">
+                          <img src="{{ "images/def-circle.png" | relURL }}" alt="Logo Padrão" class="circle-logo">
                         {{- end }}
                     </div>
                     <h3 class="circle-title">{{ .Title }}</h3>
@@ -113,7 +113,7 @@
                     {{- $warningTags = printf "%s[EXT] " $warningTags -}}
                 {{- end }}
                 <a href="{{ $gamePage.RelPermalink }}?patch={{ $patchID }}" class="game-item">
-                    <img src="/games/{{ $gamePage.File.BaseFileName }}/grid.jpg" alt="Capa de {{ $gamePage.Title }}" class="game-image">
+                    <img src="{{ printf "games/%s/grid.jpg" $gamePage.File.BaseFileName | relURL }}" alt="Capa de {{ $gamePage.Title }}" class="game-image">
                     <h3 class="game-title">
                         {{- $warningTags -}}{{- if eq .Params.title_type "translation" -}}
                             {{- .Params.title -}}

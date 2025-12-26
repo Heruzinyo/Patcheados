@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="general-container">
     <section class="start-section">
-        <img src="/images/Patcheados.png" alt="Logo do Patcheados" class="logo-image">
+        <img src="{{ "images/Patcheados.png" | relURL }}" alt="Logo do Patcheados" class="logo-image">
         <p class="about-text">
             O <b>Patcheados</b> é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos.
         </p>
@@ -63,7 +63,7 @@
                     {{- if $gamePage -}}
                     {{- $patchID := $patch.File.BaseFileName }}
                     <a href="{{ $gamePage.RelPermalink }}?patch={{ $patchID }}" class="game-item">
-                        <img src="/games/{{ $gameID }}/grid.jpg" alt="Capa de {{ $gamePage.Title }}" class="game-image">
+                        <img src="{{ printf "games/%s/grid.jpg" $gameID | relURL }}" alt="Capa de {{ $gamePage.Title }}" class="game-image">
                         <h3 class="game-title">
                             {{- if eq $patch.Params.title_type "translation" -}}
                                 {{- $patch.Params.title -}}

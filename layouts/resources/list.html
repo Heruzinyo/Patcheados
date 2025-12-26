@@ -6,7 +6,7 @@
             <div class="resources-list">
                 {{ range .Pages -}}
                 <a href="{{ .RelPermalink }}" class="resource-link">
-                    <img src="/svg/ui/file-text.svg" alt="" class="resource-icon">
+                    <img src="{{ "svg/ui/file-text.svg" | relURL }}" alt="" class="resource-icon">
                     <span class="resource-title">{{ .Title }}</span>
                 </a>
                 {{ end -}}
