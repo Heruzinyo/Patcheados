@@ -1,0 +1,26 @@
+{{ define "main" }}
+<div class="general-container">
+    <h2>{{ .Title }}</h2>
+    <div class="search-container">
+        <div class="search-wrapper">
+            <img src="/svg/ui/search.svg" alt="" class="search-icon">
+            <input type="text" class="search-input" placeholder="Pesquisar círculos..." aria-label="Pesquisar">
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            <div class="circles-grid" id="circlesGrid">
+                <!-- Pagefind -->
+            </div>
+        </div>
+    </div>
+</div>
+{{- $search := resources.Get "js/search.js" | minify | fingerprint -}}
+<script src="{{ $search.RelPermalink }}"></script>
+<script>
+  new SearchSystem({
+    resultsSelector: '#circlesGrid',
+    itemSelector: '.circle-item'
+  });
+</script>
+{{ end }}

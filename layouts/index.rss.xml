@@ -1,0 +1,65 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Patcheados</title>
+    <link>{{ .Permalink }}</link>
+    <description>Atualizações Recentes</description>
+    <language>pt-br</language>
+    {{- with .OutputFormats.Get "RSS" }}
+        <atom:link href="{{ .Permalink }}" rel="self" type="application/rss+xml" />
+    {{- end }}
+    {{- $patches := slice -}}
+    {{- range where .Site.RegularPages "Type" "patches" -}}
+        {{- $latest := "0000-00-00" -}}
+        {{- if .Params.download -}}
+            {{- range .Params.download -}}
+                {{- if .release -}}
+                    {{- $parts := split .release "/" -}}
+                    {{- if eq (len $parts) 3 -}}
+                        {{- $dateStr := printf "%04d-%02d-%02d" (index $parts 2 | float | int) (index $parts 1 | float | int) (index $parts 0 | float | int) -}}
+                        {{- if gt $dateStr $latest -}}
+                            {{- $latest = $dateStr -}}
+                        {{- end -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if ne $latest "0000-00-00" -}}
+            {{- $patches = $patches | append (dict "Page" . "Date" $latest) -}}
+        {{- end -}}
+    {{- end -}}
+    {{- range first 20 (sort $patches "Date" "desc") }}
+    {{- $patch := .Page -}}
+    {{- $gameID := $patch.Params.game -}}
+    {{- $gamePage := site.GetPage (printf "/games/%s" $gameID) -}}
+    {{- $link := $patch.Permalink -}}
+    {{- if $gamePage -}}
+        {{- $patchID := $patch.File.BaseFileName -}}
+        {{- $link = printf "%s?patch=%s" $gamePage.Permalink $patchID -}}
+    {{- end -}}
+    {{- $creators := slice -}}
+    {{- with $patch.Params.circle -}}
+        {{- range . -}}
+            {{- $groupPage := site.GetPage (printf "/circles/%s" .) -}}
+            {{- if $groupPage -}}
+                {{- $creators = $creators | append $groupPage.Title -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+    {{- with $patch.Params.author -}}
+        {{- range . -}}
+            {{- $authorPage := site.GetPage (printf "/authors/%s" .) -}}
+            {{- if $authorPage -}}
+                {{- $creators = $creators | append $authorPage.Title -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end }}
+    <item>
+      <title>{{ if $gamePage }}{{ if eq $patch.Params.title_type "translation" }}{{ $patch.Params.title }}{{ else if eq $patch.Params.title_type "version" }}{{ $gamePage.Title }} ({{ $patch.Params.title }}){{ else }}{{ $gamePage.Title }}{{ end }}{{ else }}{{ $patch.Title }}{{ end }}</title>
+      <link>{{ $link }}</link>
+      <pubDate>{{ (time .Date).Format "Mon, 02 Jan 2006 15:04:05 -0700" }}</pubDate>
+      <guid>{{ $link }}</guid>
+      <description>{{ if $gamePage }}{{ printf "<img src=\"%s\" alt=\"Capa de %s\" /><br>" (printf "/games/%s/grid.jpg" $gameID | absURL) $gamePage.Title | html }}{{ end }}{{ printf "<p><strong>Patch por:</strong> %s</p>" (delimit $creators ", ") | html }}{{ printf "<p><strong>Status:</strong> %s</p>" $patch.Params.status | html }}{{ printf "<p><strong>Plataformas:</strong> %s</p>" (delimit $patch.Params.platforms ", ") | html }}{{ $patch.Summary | html }}</description>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

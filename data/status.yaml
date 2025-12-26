@@ -1,0 +1,8 @@
+"Concluído":
+  class: completed
+"Em Desenvolvimento":
+  class: wip
+"Pausado":
+  class: hiatus
+"Cancelado":
+  class: cancelled

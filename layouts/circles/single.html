@@ -1,0 +1,123 @@
+{{ define "main" }}
+{{ partial "pagefind.html" (dict "page" . "type" "circles" "site" .Site) }}
+<div class="general-container">
+    <h2>{{ .Title }}</h2>
+    <section class="circle-header">
+        <div class="circle-info-card">
+            <div class="circle-intro">
+                {{- $logoFilename := printf "%s.png" .File.BaseFileName -}}
+                {{- $logoPath := printf "static/circles/%s" $logoFilename -}}
+                {{ if fileExists $logoPath }}
+                  <img src="{{ printf "/circles/%s" $logoFilename | relURL }}" alt="Logo de {{ .Title }}" class="circle-logo">
+                {{- else }}
+                  <img src="/images/def-circle.png" alt="Logo Padrão" class="circle-logo">
+                {{- end }}
+            </div>
+            {{- if .Content }}
+            <div class="description">
+                {{ .Content -}}
+            </div>
+            {{- end -}}
+            {{ if .Params.sns }}
+            <div class="circle-sns">
+                {{- range .Params.sns -}}
+                {{- $icon := index site.Data.icon.services .name -}}
+                {{- $code := $icon.code }}
+                <a href="{{ .url }}" target="_blank" class="btn">
+                    <img src="/svg/services/{{ $code }}.svg" alt="">
+                    {{ .name }}
+                </a>
+                {{- end }}
+            </div>
+            {{- end }}
+        </div>
+    </section>
+
+    {{- if .Params.members }}
+    <div class="card card-spaced">
+        <div class="card-content">
+            <h2 class="section-title">Membros</h2>
+            <div class="user-grid-alt">
+            {{- $members := slice -}}
+            {{- range .Params.members -}}
+              {{- $p := $.Site.GetPage (printf "/authors/%s" .) -}}
+              {{- if $p }}{{ $members = $members | append $p }}{{ end -}}
+            {{- end -}}
+            {{- range sort $members "Title" }}
+                <a href="{{ .RelPermalink }}" class="user-card user-card-lg">
+                  {{- $avatarFilename := printf "%s.jpg" .File.BaseFileName -}}
+                  {{- $avatarPath := printf "static/authors/%s" $avatarFilename -}}
+                  {{ if fileExists $avatarPath }}
+                    <img src="{{ printf "/authors/%s" $avatarFilename | relURL }}" alt="Foto de Perfil de {{ .Title }}">
+                  {{- else }}
+                    <img src="/images/def-author.png" alt="Foto de Perfil Padrão">
+                  {{- end }}
+                  <div class="user-card-info">
+                    <span class="user-card-name">{{ .Title }}</span>
+                  </div>
+                </a>
+            {{- end }}
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    {{- $circleName := .File.BaseFileName -}}
+    {{- $patches := where (where .Site.RegularPages "Type" "patches") ".Params.circle" "intersect" (slice $circleName) -}}
+    {{- if gt (len $patches) 0 -}}
+    <div class="card">
+        <div class="card-content">
+            <h2 class="section-title">Patches Disponíveis</h2>
+            <div class="games-grid">
+                {{ range $patches -}}
+                {{- $patch := . -}}
+                {{- $gamePage := site.GetPage (printf "/games/%s" .Params.game) -}}
+                {{- if $gamePage -}}
+                {{- $patchID := $patch.File.BaseFileName -}}
+
+                {{- $warningTags := "" -}}
+                {{- if eq .Params.official true -}}
+                    {{- $warningTags = printf "%s[Oficial] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.mtl true -}}
+                    {{- $warningTags = printf "%s[MTL] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.ai_dub true -}}
+                    {{- $warningTags = printf "%s[Dub IA] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.external true -}}
+                    {{- $warningTags = printf "%s[EXT] " $warningTags -}}
+                {{- end -}}
+
+                <a href="{{ $gamePage.RelPermalink }}?patch={{ $patchID }}" class="game-item">
+                    <img src="/games/{{ $gamePage.File.BaseFileName }}/grid.jpg" alt="Capa de {{ $gamePage.Title }}" class="game-image">
+                    <h3 class="game-title">
+                        {{- $warningTags -}}{{- if eq .Params.title_type "translation" -}}
+                            {{- .Params.title -}}
+                        {{- else if eq .Params.title_type "version" -}}
+                            {{- $patchTitle := .Params.title -}}
+                            {{- $gamePage.Title -}} ({{- $patchTitle -}})
+                        {{- else -}}
+                            {{- $gamePage.Title -}}
+                        {{- end -}}
+                    </h3>
+                    <div class="game-meta">
+                        {{ $statusData := index .Site.Data.status .Params.status -}}
+                        <span class="tag tag-{{ $statusData.class }}">{{ .Params.status }}</span>
+                        {{- if .Params.platforms }}
+                        <div class="tags">
+                            {{- range .Params.platforms }}
+                            <span class="tag tag-sm">{{ . }}</span>
+                            {{- end }}
+                        </div>
+                        {{- end }}
+                    </div>
+                </a>
+                {{ end -}}
+                {{- end -}}
+            </div>
+        </div>
+    </div>
+    {{- end }}
+</div>
+{{ end }}

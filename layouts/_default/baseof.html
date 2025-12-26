@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <meta property="og:image" content="{{ "/images/WP.png" | absURL }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Patcheados">
+    {{- $description := "O Patcheados é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos." -}}
+    {{- if and (eq .Type "games") .IsPage -}}
+        {{- $description = printf "Patches de tradução para %s." .Title -}}
+    {{- end -}}
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:locale" content="pt_BR">
+    <meta name="description" content="{{ $description }}">
+    <link rel="icon" href="{{ "/images/favicon.png" | relURL }}" type="image/png">
+    {{- $style := resources.Get "css/style.css" | minify | fingerprint -}}
+    <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+</head>
+<body>
+    {{ partial "header.html" . -}}
+    <main>
+        {{- block "main" . }}{{ end -}}
+    </main>
+    {{ partial "footer.html" . -}}
+    <div class="lightbox" id="lightbox">
+      <img src="" alt="" class="lightbox-image" id="lightboxImage">
+    </div>
+    {{- $nav := resources.Get "js/nav.js" | minify | fingerprint -}}
+    <script src="{{ $nav.RelPermalink }}"></script>
+    {{- $lightbox := resources.Get "js/lightbox.js" | minify | fingerprint -}}
+    <script src="{{ $lightbox.RelPermalink }}"></script>
+</body>
+</html>

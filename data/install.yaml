@@ -1,0 +1,46 @@
+generic_pc:
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Mova o conteúdo extraído para a pasta de instalação do jogo (antes de mover, verifique se os nomes das pastas do patch são os mesmos usados no diretório do jogo)."
+
+generic_pc_mod:
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Mova o conteúdo extraído para a pasta de instalação do jogo (antes de mover, verifique se os nomes das pastas do patch são os mesmos usados no diretório do jogo)."
+  - "Abra o jogo."
+  - "No menu de configurações (settings), procure pelas opções de idioma (language) e coloque em \"Português\"."
+
+generic_installer:
+  - "Siga as instruções do instalador para aplicar o patch."
+  
+generic_apk:
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Caso o jogo original já esteja instalado, desinstale-o."
+  - "Instale o APK do patch no dispositivo Android."
+
+generic_build_apk:
+  - "Baixe o APK original do jogo."
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Extraia o APK do jogo."
+  - "Copie os arquivos do patch para dentro da pasta do APK extraído."
+  - "Compacte os arquivos da pasta do APK em um arquivo .zip com a compactação no 0."
+  - "Renomeie o arquivo compactado .zip para a extensão .apk"
+  - "Use um software de assinatura de APK e aplique a chave fornecida com o patch."
+  - "Após a aplicação da chave, instale o APK no dispositivo."
+
+generic_switch:
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Copie a pasta extraída (números e letras aleatórios) para a pasta \"contents\" dentro de \"atmosphere\"."
+  - "Caso esteja usando um emulador, abra a pasta extraída e mova a pasta \"romfs\" para dentro de \"Atmosphere\"."
+
+generic_xdelta:
+  - "Use um software de aplicação de patches xdelta."
+  - "Selecione a ROM original como arquivo de origem."
+  - "Selecione o arquivo do patch."
+  - "Aplique o patch."
+  - "Rode a ROM patcheada."
+
+generic_ppf:
+  - "Use um software de aplicação de patches ppf."
+  - "Selecione a ROM original como arquivo de origem."
+  - "Selecione o arquivo do patch."
+  - "Aplique o patch."
+  - "Rode a ROM patcheada."

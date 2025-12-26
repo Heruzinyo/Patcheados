@@ -1,0 +1,174 @@
+{{ define "main" }}
+{{ partial "pagefind.html" (dict "page" . "type" "authors" "site" .Site) }}
+<div class="general-container">
+    <h2>{{ .Title }}</h2>
+    <section class="author-header">
+        <div class="author-info-card">
+            <div class="author-intro">
+                {{- $avatarFilename := printf "%s.jpg" .File.BaseFileName -}}
+                {{- $avatarPath := printf "static/authors/%s" $avatarFilename -}}
+                {{ if fileExists $avatarPath }}
+                  <img src="{{ printf "/authors/%s" $avatarFilename | relURL }}" alt="Foto de Perfil de {{ .Title }}" class="author-avatar">
+                {{- else }}
+                  <img src="/images/def-author.png" alt="Foto de Perfil Padrão" class="author-avatar">
+                {{- end }}
+            </div>
+            {{- if .Content }}
+            <div class="description">
+                {{ .Content -}}
+            </div>
+            {{- end -}}
+            {{ if .Params.sns }}
+            <div class="author-sns">
+                {{- range .Params.sns -}}
+                {{- $icon := index site.Data.icon.services .name -}}
+                {{- $code := $icon.code }}
+                <a href="{{ .url }}" target="_blank" class="btn">
+                    <img src="/svg/services/{{ $code }}.svg" alt="">
+                    {{ .name }}
+                </a>
+                {{- end }}
+            </div>
+            {{- end }}
+        </div>
+    </section>
+
+    {{- $authorName := .File.BaseFileName -}}
+    {{- $circles := where (where .Site.RegularPages "Type" "circles") ".Params.members" "intersect" (slice $authorName) -}}
+    {{ if gt (len $circles) 0 }}
+    <div class="card card-spaced">
+        <div class="card-content">
+            <h2 class="section-title">Círculos</h2>
+            <div class="circles-grid">
+                {{- range $circles }}
+                <a href="{{ .RelPermalink }}" class="circle-item">
+                    <div class="circle-logo-box">
+                        {{- $logoFilename := printf "%s.png" .File.BaseFileName -}}
+                        {{- $logoPath := printf "static/circles/%s" $logoFilename -}}
+                        {{ if fileExists $logoPath }}
+                          <img src="{{ printf "/circles/%s" $logoFilename | relURL }}" alt="Logo de {{ .Title }}" class="circle-logo">
+                        {{- else }}
+                          <img src="/images/def-circle.png" alt="Logo Padrão" class="circle-logo">
+                        {{- end }}
+                    </div>
+                    <h3 class="circle-title">{{ .Title }}</h3>
+                    <p class="circle-description">{{ .Summary }}</p>
+                </a>
+                {{- end }}
+            </div>
+        </div>
+    </div>
+    {{- end -}}
+
+    {{- $authorName := .File.BaseFileName -}}
+    {{- $allPatches := where .Site.RegularPages "Type" "patches" -}}
+    {{- $foundPatches := slice -}}
+    {{- $seen := dict -}}
+    
+    {{- range $allPatches -}}
+        {{- $patch := . -}}
+        {{- $hasMatch := false -}}
+        
+        {{- range $role, $authors := .Params.credits -}}
+            {{- range $authors -}}
+                {{- if not $hasMatch -}}
+                    {{- if reflect.IsMap . -}}
+                        {{- if eq .name $authorName -}}
+                            {{- $hasMatch = true -}}
+                        {{- end -}}
+                    {{- else if eq . $authorName -}}
+                        {{- $hasMatch = true -}}
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+        
+        {{- if $hasMatch -}}
+            {{- $foundPatches = $foundPatches | append $patch -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- if gt (len $foundPatches) 0 }}
+    <div class="card">
+        <div class="card-content">
+            <h2 class="section-title">Patches Trabalhados</h2>
+            <div class="games-grid">
+                {{- range $foundPatches -}}
+                {{- $patch := . -}}
+                {{- $gamePage := site.GetPage (printf "/games/%s" .Params.game) -}}
+                {{- if $gamePage -}}
+                {{- $patchID := $patch.File.BaseFileName -}}
+
+                {{- $warningTags := "" -}}
+                {{- if eq .Params.official true -}}
+                    {{- $warningTags = printf "%s[Oficial] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.mtl true -}}
+                    {{- $warningTags = printf "%s[MTL] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.ai_dub true -}}
+                    {{- $warningTags = printf "%s[Dub IA] " $warningTags -}}
+                {{- end -}}
+                {{- if eq .Params.external true -}}
+                    {{- $warningTags = printf "%s[EXT] " $warningTags -}}
+                {{- end }}
+                <a href="{{ $gamePage.RelPermalink }}?patch={{ $patchID }}" class="game-item">
+                    <img src="/games/{{ $gamePage.File.BaseFileName }}/grid.jpg" alt="Capa de {{ $gamePage.Title }}" class="game-image">
+                    <h3 class="game-title">
+                        {{- $warningTags -}}{{- if eq .Params.title_type "translation" -}}
+                            {{- .Params.title -}}
+                        {{- else if eq .Params.title_type "version" -}}
+                            {{- $patchTitle := .Params.title -}}
+                            {{- $gamePage.Title -}} ({{- $patchTitle -}})
+                        {{- else -}}
+                            {{- $gamePage.Title -}}
+                        {{- end -}}
+                    </h3>
+                    <div class="game-meta">
+                        <span class="game-circle">
+                            {{- $creators := slice -}}
+                            {{- with .Params.circle -}}
+                                {{- range . -}}
+                                    {{- $groupPage := $.Site.GetPage (printf "/circles/%s" .) -}}
+                                    {{- if $groupPage -}}
+                                        {{- $creators = $creators | append $groupPage.Title -}}
+                                    {{- end -}}
+                                {{- end -}}
+                            {{- end -}}
+                            {{- with .Params.author -}}
+                                {{- range . -}}
+                                    {{- $authorPage := $.Site.GetPage (printf "/authors/%s" .) -}}
+                                    {{- if $authorPage -}}
+                                        {{- $creators = $creators | append $authorPage.Title -}}
+                                    {{- end -}}
+                                {{- end -}}
+                            {{- end -}}
+                            {{- delimit $creators ", " -}}
+                        </span>
+                        <div class="tags">
+                            {{- range $role, $authors := .Params.credits -}}
+                                {{- range $authors -}}
+                                    {{- if reflect.IsMap . -}}
+                                        {{- if eq .name $authorName }}
+                                        <span class="tag tag-sm">{{- $role | title -}}</span>
+                                        {{- end -}}
+                                    {{- else -}}
+                                        {{- if eq . $authorName }}
+                                        <span class="tag tag-sm">{{- $role | title -}}</span>
+                                        {{- end -}}
+                                    {{- end -}}
+                                {{- end -}}
+                            {{- end }}
+                        </div>
+                        {{ $statusData := index .Site.Data.status .Params.status -}}
+                        <span class="tag tag-{{ $statusData.class }}">{{ .Params.status }}</span>
+                    </div>
+                </a>
+                {{- end }}
+                {{- end }}
+            </div>
+        </div>
+    </div>
+    {{- end }}
+</div>
+{{ end }}

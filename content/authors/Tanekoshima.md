@@ -1,0 +1,3 @@
+---
+title: "Gabriel \"Tanekoshima\" Hideki"
+---

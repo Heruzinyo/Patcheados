@@ -1,0 +1,283 @@
+{{- $page := .page -}}
+{{- $type := .type -}}
+{{- $site := .site -}}
+{{- $image := "" -}}
+{{- $filters := dict -}}
+{{- $maxPatchDate := 0 -}}
+{{- $synonymMap := dict -}}
+{{- if $site.Data.search -}}
+  {{- range $category, $items := $site.Data.search -}}
+    {{- range $canonical, $synonyms := $items -}}
+       {{- $normKey := $canonical | lower | replaceRE `\s+` "_" -}}
+       {{- $synonymMap = merge $synonymMap (dict $normKey $synonyms) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if eq $type "games" -}}
+  {{- $image = printf "/games/%s/grid.jpg" $page.File.BaseFileName -}}
+  {{- $filters = merge $filters (dict "type" "game") -}}
+  {{- $allPatches := where $site.RegularPages "Type" "patches" -}}
+  {{- $gamePatches := where $allPatches ".Params.game" $page.File.BaseFileName -}}
+  {{- $patchPlatforms := slice -}}
+  {{- $patchCreators := slice -}}
+  {{- $patchPublishers := slice -}}
+  {{- $patchRegions := slice -}}
+  {{- $patchReleaseYears := slice -}}
+  {{- $patchReleaseMap := dict -}}
+  {{- $allSubs := slice -}}
+  {{- $allGraphics := slice -}}
+  {{- $allDub := slice -}}
+  {{- $allStatuses := slice -}}
+  {{- $allOrigins := slice -}}
+  {{- $allArchive := slice -}}
+  {{- $allMTL := slice -}}
+  {{- $allAIDub := slice -}}
+  {{- $allExternal := slice -}}
+  {{- $allLostSource := slice -}}
+  {{- $allLostMedia := slice -}}
+  {{- $allOfficial := slice -}}
+  {{- range $gamePatches -}}
+    {{- $currentPatchPlatforms := slice -}}
+    {{- range .Params.platforms -}}
+      {{- $p := replace . " " "_" -}}
+      {{- $patchPlatforms = $patchPlatforms | append $p -}}
+      {{- $currentPatchPlatforms = $currentPatchPlatforms | append ($p | lower) -}}
+    {{- end -}}
+    {{- if .Params.publisher -}}
+      {{- $patchPublishers = $patchPublishers | append .Params.publisher -}}
+    {{- end -}}
+    {{- with .Params.circle -}}
+      {{- range . -}}
+        {{- $groupPage := $site.GetPage (printf "/circles/%s" .) -}}
+        {{- if $groupPage -}}
+          {{- $patchCreators = $patchCreators | append $groupPage.File.BaseFileName -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- with .Params.author -}}
+      {{- range . -}}
+        {{- $authorPage := $site.GetPage (printf "/authors/%s" .) -}}
+        {{- if $authorPage -}}
+          {{- $patchCreators = $patchCreators | append $authorPage.File.BaseFileName -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $allMTL = $allMTL | append (cond (eq .Params.mtl true) "true" "false") -}}
+    {{- $allAIDub = $allAIDub | append (cond (eq .Params.ai_dub true) "true" "false") -}}
+    {{- $allExternal = $allExternal | append (cond (eq .Params.external true) "true" "false") -}}
+    {{- $allLostSource = $allLostSource | append (cond (eq .Params.lost_source true) "true" "false") -}}
+    {{- $allLostMedia = $allLostMedia | append (cond (eq .Params.lost_media true) "true" "false") -}}
+    {{- $allOfficial = $allOfficial | append (cond (eq .Params.official true) "true" "false") -}}
+    {{- if isset .Params "subs" }}{{ $allSubs = $allSubs | append (string .Params.subs) }}{{ end -}}
+    {{- if isset .Params "graphics" }}{{ $allGraphics = $allGraphics | append (string .Params.graphics) }}{{ end -}}
+    {{- if isset .Params "dub" }}{{ $allDub = $allDub | append (string .Params.dub) }}{{ end -}}
+    {{- if .Params.status -}}
+      {{- $allStatuses = $allStatuses | append .Params.status -}}
+    {{- end -}}
+    {{- if .Params.origin -}}
+      {{- $allOrigins = $allOrigins | append .Params.origin -}}
+    {{- end -}}
+    {{- range .Params.download -}}
+      {{- if .region -}}
+        {{- $patchRegions = $patchRegions | append .region -}}
+      {{- end -}}
+      {{- $allArchive = $allArchive | append (cond (eq .archive true) "true" "false") -}}
+      {{- if .release -}}
+        {{- $dateStr := .release -}}
+        {{- $dlPlatform := .platform -}}
+        {{- $targets := slice -}}
+        {{- if $dlPlatform -}}
+          {{- $p := $dlPlatform | lower -}}
+          {{- $p = replace $p " " "_" -}}
+          {{- $targets = slice $p -}}
+        {{- else -}}
+          {{- $targets = $currentPatchPlatforms -}}
+        {{- end -}}
+        {{- range $targets -}}
+          {{- $p := . -}}
+          {{- $parts := split $dateStr "/" -}}
+          {{- if eq (len $parts) 3 -}}
+            {{- $newVal := int (printf "%04d%02d%02d" (int (float (index $parts 2))) (int (float (index $parts 1))) (int (float (index $parts 0)))) -}}
+            {{- $curr := index $patchReleaseMap $p -}}
+            {{- $update := true -}}
+            {{- if $curr -}}
+              {{- if le $newVal $curr.val -}}
+                {{- $update = false -}}
+              {{- end -}}
+            {{- end -}}
+            {{- if $update -}}
+              {{- $patchReleaseMap = merge $patchReleaseMap (dict $p (dict "val" $newVal "str" $dateStr)) -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $patchReleaseDates := slice -}}
+  {{- range $k, $v := $patchReleaseMap -}}
+    {{- $patchReleaseDates = $patchReleaseDates | append (printf "%s:%s" $k $v.str) -}}
+    {{- with index $synonymMap $k -}}
+      {{- range . -}}
+        {{- $patchReleaseDates = $patchReleaseDates | append (printf "%s:%s" . $v.str) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- range $patchReleaseMap -}}
+    {{- if gt .val $maxPatchDate -}}
+      {{- $maxPatchDate = .val -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $gameReleaseYears := slice -}}
+  {{- $gameReleaseDates := slice -}}
+  {{- if $page.Params.release -}}
+    {{- $yearMatches := findRE `\d{4}` $page.Params.release -}}
+    {{- if $yearMatches -}}
+      {{- $gameReleaseYears = $yearMatches | uniq -}}
+    {{- end -}}
+    {{- $dateMatches := findRE `\d{2}/\d{2}/\d{4}` $page.Params.release -}}
+    {{- if $dateMatches -}}
+      {{- $gameReleaseDates = $dateMatches -}}
+    {{- end -}}
+    {{- $parts := split $page.Params.release "/" -}}
+    {{- $gameDateSort := 0 -}}
+    {{- if eq (len $parts) 3 -}}
+      {{- $gameDateSort = printf "%04d%02d%02d" (int (float (index $parts 2))) (int (float (index $parts 1))) (int (float (index $parts 0))) -}}
+    {{- else if $yearMatches -}}
+      {{- $gameDateSort = printf "%04d0101" (int (index $yearMatches 0)) -}}
+    {{- end -}}
+    {{- $filters = merge $filters (dict "sort_date" $gameDateSort) -}}
+  {{- end -}}
+  {{- $filters = merge $filters (dict "tag" ($page.Params.tags | default slice)) -}}
+  {{- $filters = merge $filters (dict "platform" (apply $page.Params.platforms "replace" "." " " "_")) -}}
+  {{- $filters = merge $filters (dict "patchplatform" ($patchPlatforms | uniq)) -}}
+  {{- $filters = merge $filters (dict "creator" ($patchCreators | uniq)) -}}
+  {{- $filters = merge $filters (dict "developer" ($page.Params.developer | default "")) -}}
+  {{- $filters = merge $filters (dict "publisher" ($page.Params.publisher | default "")) -}}
+  {{- $filters = merge $filters (dict "patchpublisher" ($patchPublishers | uniq)) -}}
+  {{- $filters = merge $filters (dict "language" ($page.Params.language | default "")) -}}
+  {{- $filters = merge $filters (dict "region" ($page.Params.region | default slice)) -}}
+  {{- $filters = merge $filters (dict "patchregion" ($patchRegions | uniq)) -}}
+  {{- $filters = merge $filters (dict "release" ($gameReleaseDates | default $gameReleaseYears)) -}}
+  {{- $filters = merge $filters (dict "patchrelease" ($patchReleaseDates | uniq)) -}}
+  {{- $filters = merge $filters (dict "players" ($page.Params.players | default 0)) -}}
+  {{- $filters = merge $filters (dict "nsfw" ($page.Params.nsfw | default false)) -}}
+  {{- $filters = merge $filters (dict "mtl" ($allMTL | uniq)) -}}
+  {{- $filters = merge $filters (dict "ai_dub" ($allAIDub | uniq)) -}}
+  {{- $filters = merge $filters (dict "external" ($allExternal | uniq)) -}}
+  {{- $filters = merge $filters (dict "lost_source" ($allLostSource | uniq)) -}}
+  {{- $filters = merge $filters (dict "lost_media" ($allLostMedia | uniq)) -}}
+  {{- $filters = merge $filters (dict "official" ($allOfficial | uniq)) -}}
+  {{- $filters = merge $filters (dict "subs" ($allSubs | uniq)) -}}
+  {{- $filters = merge $filters (dict "graphics" ($allGraphics | uniq)) -}}
+  {{- $filters = merge $filters (dict "dub" ($allDub | uniq)) -}}
+  {{- $filters = merge $filters (dict "status" ($allStatuses | uniq)) -}}
+  {{- $filters = merge $filters (dict "origin" ($allOrigins | uniq)) -}}
+  {{- $filters = merge $filters (dict "archive" ($allArchive | uniq)) -}}
+{{- else if eq $type "authors" -}}
+  {{- $avatarPath := printf "static/authors/%s.jpg" $page.File.BaseFileName -}}
+  {{- if fileExists $avatarPath -}}
+    {{- $image = printf "/authors/%s.jpg" $page.File.BaseFileName -}}
+  {{- else -}}
+    {{- $image = "/images/def-author.png" -}}
+  {{- end -}}
+  {{- $filters = merge $filters (dict "type" "author") -}}
+  {{- $allPatches := where $site.RegularPages "Type" "patches" -}}
+  {{- $allRoles := slice -}}
+  {{- $allCharacters := slice -}}
+  {{- range $allPatches -}}
+    {{- range $role, $authors := .Params.credits -}}
+      {{- range $authors -}}
+        {{- $name := "" -}}
+        {{- $char := "" -}}
+        {{- $isCircle := false -}}
+        {{- if reflect.IsMap . -}}
+          {{- $name = .name -}}
+          {{- $char = .character -}}
+          {{- $isCircle = .circle -}}
+        {{- else -}}
+          {{- $name = . -}}
+        {{- end -}}
+        {{- if and (eq $name $page.File.BaseFileName) (not $isCircle) -}}
+          {{- $allRoles = $allRoles | append $role -}}
+          {{- if $char -}}
+            {{- $allCharacters = $allCharacters | append $char -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $allCircles := where $site.RegularPages "Type" "circles" -}}
+  {{- $authorCircles := slice -}}
+  {{- range $allCircles -}}
+    {{- if in .Params.members $page.File.BaseFileName -}}
+      {{- $authorCircles = $authorCircles | append .File.BaseFileName -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $filters = merge $filters (dict "role" ($allRoles | uniq)) -}}
+  {{- $filters = merge $filters (dict "character" ($allCharacters | uniq)) -}}
+  {{- $filters = merge $filters (dict "creator" ($authorCircles | uniq)) -}}
+{{- else if eq $type "circles" -}}
+  {{- $logoPath := printf "static/circles/%s.png" $page.File.BaseFileName -}}
+  {{- if fileExists $logoPath -}}
+    {{- $image = printf "/circles/%s.png" $page.File.BaseFileName -}}
+  {{- else -}}
+    {{- $image = "/images/def-circle.png" -}}
+  {{- end -}}
+  {{- $filters = merge $filters (dict "type" "circle") -}}
+  {{- $allPatches := where $site.RegularPages "Type" "patches" -}}
+  {{- $circleTags := slice -}}
+  {{- range $allPatches -}}
+    {{- if in .Params.circle $page.File.BaseFileName -}}
+      {{- $gamePage := $site.GetPage (printf "/games/%s" .Params.game) -}}
+      {{- if $gamePage -}}
+        {{- range $gamePage.Params.tags -}}
+          {{- $circleTags = $circleTags | append . -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $circleAuthors := slice -}}
+  {{- range $page.Params.members -}}
+    {{- $authorPage := $site.GetPage (printf "/authors/%s" .) -}}
+    {{- if $authorPage -}}
+      {{- $circleAuthors = $circleAuthors | append $authorPage.File.BaseFileName -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $filters = merge $filters (dict "tag" ($circleTags | uniq)) -}}
+  {{- $filters = merge $filters (dict "creator" ($circleAuthors | uniq)) -}}
+{{- end -}}
+
+<div style="display:none;">
+     <span data-pagefind-meta="title">{{ $page.Title | default "Sem Título" }}</span>
+     <span data-pagefind-sort="title">{{ $page.Title | default "sem titulo" | lower }}</span>
+     {{- if $filters.sort_date -}}  
+     <span data-pagefind-sort="date">{{ $filters.sort_date }}</span>
+     {{- end -}}
+     {{- if gt $maxPatchDate 0 -}}
+     <span data-pagefind-sort="patch_date">{{ $maxPatchDate }}</span>
+     {{- end -}}
+     <span data-pagefind-meta="summary">{{ $page.Summary }}</span>
+     <span data-pagefind-meta="image">{{ $image }}</span>
+     <span data-pagefind-meta="filters">{{ $filters | jsonify }}</span>
+     {{- range $key, $value := $filters -}}
+       {{- if ne $key "sort_date" -}}
+       {{- $vals := $value -}}
+       {{- if not (reflect.IsSlice $value) -}}
+         {{- $vals = slice $value -}}
+       {{- end -}}
+       {{- range $vals -}}
+         {{- $str := string . -}}
+         {{- $norm := $str | lower | replaceRE `\s+` "_" -}}
+         <span data-pagefind-filter="{{ $key }}">{{ $norm }}</span>
+         {{- with index $synonymMap $norm -}}
+           {{- range . -}}
+             <span data-pagefind-filter="{{ $key }}">{{ . }}</span>
+           {{- end -}}
+         {{- end -}}
+       {{- end -}}
+       {{- end -}}
+     {{- end -}}
+</div>
+<div style="display:none;" data-pagefind-body>
+     <h1>{{ $page.Title }}</h1>
+</div>

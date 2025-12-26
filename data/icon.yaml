@@ -1,0 +1,133 @@
+platforms:
+  "PC":
+    code: laptop
+  "Android":
+    code: android
+  "iOS":
+    code: ios
+  "Web":
+    code: globe
+  "PC Engine":
+    code: package
+  "Arcade":
+    code: joystick
+  "Nintendo Entertainment System":
+    code: package
+  "Super Nintendo Entertainment System":
+    code: package
+  "Nintendo 64":
+    code: package
+  "Nintendo GameCube":
+    code: cib-nintendo-gamecube
+  "Nintendo Wii":
+    code: cib-wii
+  "Nintendo Wii U":
+    code: cib-wiiu
+  "Nintendo Switch":
+    code: cib-nintendo-switch
+  "Game Boy":
+    code: package
+  "Game Boy Color":
+    code: package
+  "Game Boy Advance":
+    code: package
+  "Nintendo DS":
+    code: package
+  "Nintendo 2DS":
+    code: package
+  "Nintendo 3DS":
+    code: cib-nintendo-3ds
+  "Sony PlayStation":
+    code: playstation
+  "Sony PlayStation 2":
+    code: playstation2
+  "Sony PlayStation 3":
+    code: playstation3
+  "Sony PlayStation 4":
+    code: playstation4
+  "Sony PlayStation 5":
+    code: playstation5
+  "Sony PlayStation Portable":
+    code: playstationportable
+  "Sony PlayStation Vita":
+    code: playstationvita
+  "Xbox":
+    code: package
+  "Xbox 360":
+    code: package
+  "Xbox One":
+    code: cib-xbox
+  "Xbox Series S":
+    code: package
+  "Xbox Series X":
+    code: package
+  "SEGA Master System":
+    code: package
+  "SEGA Genesis":
+    code: package
+  "SEGA Game Gear":
+    code: package
+  "SEGA Saturn":
+    code: package
+  "SEGA Dreamcast":
+    code: package
+  "Meta Quest":
+    code: package
+  "Meta Quest 2":
+    code: package
+
+services:
+  "4shared":
+    code: 4shared
+  "App Store":
+    code: appstore
+  "Blogger":
+    code: blogger
+  "Bluesky":
+    code: bluesky
+  "Carrd":
+    code: carrd
+  "Discord":
+    code: discord
+  "Dropbox":
+    code: dropbox
+  "Facebook":
+    code: facebook
+  "GameBanana":
+    code: gamebanana
+  "GitHub":
+    code: github
+  "Google Drive":
+    code: googledrive
+  "Google Play":
+    code: googleplay
+  "Instagram":
+    code: instagram
+  "Internet Archive":
+    code: internetarchive
+  "itch.io":
+    code: itchdotio
+  "MediaFire":
+    code: mediafire
+  "MEGA":
+    code: mega
+  "PO.B.R.E.":
+    code: link
+  "Patcheados":
+    code: download
+  "Reddit":
+    code: reddit
+  "Romhacking.net.br":
+    code: link
+  "SharedMods":
+    code: link
+  "Site":
+    code: globe
+  "Steam":
+    code: steam
+  "Tumblr":
+    code: tumblr
+  "Twitter":
+    code: twitter
+  "YouTube":
+    code: youtube

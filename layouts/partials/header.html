@@ -1,0 +1,33 @@
+<header>
+    <h1><a href="{{ "/" | relURL }}">{{ .Site.Title }}</a></h1>
+    <nav>
+        <a href="{{ "/" | relURL }}">
+            <img src="/svg/ui/house.svg" alt="">
+            <span>Início</span>
+        </a>
+        <a href="{{ "/Jogos" | relURL }}">
+            <img src="/svg/ui/gamepad-2.svg" alt="">
+            <span>Jogos</span>
+        </a>
+        <a href="{{ "/Autores" | relURL }}">
+            <img src="/svg/ui/users-round.svg" alt="">
+            <span>Autores</span>
+        </a>
+        <a href="{{ "/Circulos" | relURL }}">
+            <img src="/svg/ui/handshake.svg" alt="">
+            <span>Circulos</span>
+        </a>
+        <a href="{{ "/Recursos" | relURL }}">
+            <img src="/svg/ui/files.svg" alt="">
+            <span>Recursos</span>
+        </a>
+        <a href="{{ "/FAQ" | relURL }}">
+            <img src="/svg/ui/circle-question-mark.svg" alt="">
+            <span>FAQ</span>
+        </a>
+    </nav>
+    <button class="nav-toggle" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+    </button>
+</header>

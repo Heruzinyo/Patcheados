@@ -1,0 +1,115 @@
+{{ define "main" }}
+<div class="general-container">
+    <section class="start-section">
+        <img src="/images/Patcheados.png" alt="Logo do Patcheados" class="logo-image">
+        <p class="about-text">
+            O <b>Patcheados</b> é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos.
+        </p>
+        <p class="about-text">
+            Este projeto é mantido pela comunidade. Você pode contribuir adicionando novos jogos/patches, atualizando informações ou participando das traduções em andamento.
+        </p>
+    </section>
+
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">{{ len (where .Site.RegularPages "Type" "games") }}</div>
+                <div class="stat-label">Total de Jogos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ len (where .Site.RegularPages "Type" "patches") }}</div>
+                <div class="stat-label">Total de Patches</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ len (where .Site.RegularPages "Type" "circles") }}</div>
+                <div class="stat-label">Total de Círculos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">{{ len (where .Site.RegularPages "Type" "authors") }}</div>
+                <div class="stat-label">Total de Autores</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="updated-games-section">
+        <h2>Atualizações Recentes</h2>
+        <div class="card">
+            <div class="card-content">
+                <div class="games-grid">
+                    {{- $patches := slice -}}
+                    {{- range where .Site.RegularPages "Type" "patches" -}}
+                        {{- $latest := "0000-00-00" -}}
+                        {{- if .Params.download -}}
+                            {{- range .Params.download -}}
+                                {{- if .release -}}
+                                    {{- $parts := split .release "/" -}}
+                                    {{- if eq (len $parts) 3 -}}
+                                        {{- $dateStr := printf "%04d-%02d-%02d" (index $parts 2 | float | int) (index $parts 1 | float | int) (index $parts 0 | float | int) -}}
+                                        {{- if gt $dateStr $latest -}}
+                                            {{- $latest = $dateStr -}}
+                                        {{- end -}}
+                                    {{- end -}}
+                                {{- end -}}
+                            {{- end -}}
+                        {{- end -}}
+                        {{- if ne $latest "0000-00-00" -}}
+                            {{- $patches = $patches | append (dict "Page" . "Date" $latest) -}}
+                        {{- end -}}
+                    {{- end -}}
+                    {{- range first 8 (sort $patches "Date" "desc") }}
+                    {{- $patch := .Page -}}
+                    {{- $gameID := $patch.Params.game -}}
+                    {{- $gamePage := site.GetPage (printf "/games/%s" $gameID) -}}
+                    {{- if $gamePage -}}
+                    {{- $patchID := $patch.File.BaseFileName }}
+                    <a href="{{ $gamePage.RelPermalink }}?patch={{ $patchID }}" class="game-item">
+                        <img src="/games/{{ $gameID }}/grid.jpg" alt="Capa de {{ $gamePage.Title }}" class="game-image">
+                        <h3 class="game-title">
+                            {{- if eq $patch.Params.title_type "translation" -}}
+                                {{- $patch.Params.title -}}
+                            {{- else if eq $patch.Params.title_type "version" -}}
+                                {{- $gamePage.Title -}} ({{- $patch.Params.title -}})
+                            {{- else -}}
+                                {{- $gamePage.Title -}}
+                            {{- end -}}
+                        </h3>
+                        <div class="game-meta">
+                            <span class="game-circle">
+                                {{- $creators := slice -}}
+                                {{- with $patch.Params.circle -}}
+                                    {{- range . -}}
+                                        {{- $groupPage := site.GetPage (printf "/circles/%s" .) -}}
+                                        {{- if $groupPage -}}
+                                            {{- $creators = $creators | append $groupPage.Title -}}
+                                        {{- end -}}
+                                    {{- end -}}
+                                {{- end -}}
+                                {{- with $patch.Params.author -}}
+                                    {{- range . -}}
+                                        {{- $authorPage := site.GetPage (printf "/authors/%s" .) -}}
+                                        {{- if $authorPage -}}
+                                            {{- $creators = $creators | append $authorPage.Title -}}
+                                        {{- end -}}
+                                    {{- end -}}
+                                {{- end -}}
+                                {{- delimit $creators ", " -}}
+                            </span>
+                            {{ $statusData := index site.Data.status $patch.Params.status -}}
+                            <span class="tag tag-{{ $statusData.class }}">{{ $patch.Params.status }}</span>
+                            {{- if $patch.Params.platforms }}
+                            <div class="tags">
+                                {{- range $patch.Params.platforms }}
+                                <span class="tag tag-sm">{{ . }}</span>
+                                {{- end }}
+                            </div>
+                            {{- end }}
+                        </div>
+                    </a>
+                    {{- end -}}
+                    {{- end }}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{{ end }}

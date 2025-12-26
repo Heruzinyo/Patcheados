@@ -1,0 +1,17 @@
+{{ define "main" }}
+<div class="general-container">
+    <h2>Recursos</h2>
+    <div class="card">
+        <div class="card-content">
+            <div class="resources-list">
+                {{ range .Pages -}}
+                <a href="{{ .RelPermalink }}" class="resource-link">
+                    <img src="/svg/ui/file-text.svg" alt="" class="resource-icon">
+                    <span class="resource-title">{{ .Title }}</span>
+                </a>
+                {{ end -}}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

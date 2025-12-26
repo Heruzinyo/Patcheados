@@ -1,0 +1,505 @@
+{{- $warnings := slice
+  (dict "key" "lost_source" "msg" "A distribuição original do patch foi perdida com o tempo, por isso disponibilizamos um link para um backup não oficial.")
+  (dict "key" "lost_media" "msg" "Esse patch atualmente é considerado lost media, seja porque versões mais recentes não estão disponíveis, ou porque não há backup conhecido de versões específicas.")
+  (dict "key" "mtl" "msg" "Esse patch utiliza tradução por máquina, portanto a qualidade pode ser abaixo do esperado.")
+  (dict "key" "ai_dub" "msg" "Esse patch utiliza dublagem por inteligência artificial, portanto a qualidade pode ser abaixo do esperado e pode não refletir o consentimento dos dubladores originais.")
+  (dict "key" "external" "msg" "Esse \"patch\" é disponibilizado de forma externa ao jogo, pois a modificação dos arquivos originais não é possível atualmente.")
+-}}
+
+{{- range $warnings -}}
+  {{- if index $.Params .key }}
+    <div class="warning-box">
+      <img src="/svg/ui/info.svg" alt="" class="warning-icon">
+      <span>{{ .msg }}</span>
+    </div>
+  {{- end -}}
+{{- end }}
+
+<section class="card">
+    <div class="card-content">
+        <h3 class="section-title">Descrição do Patch</h3>
+        <div class="description">{{ .Content }}</div>
+
+        {{- if .Params.platforms }}
+        <div class="platform-badges">
+            <strong>Plataformas:</strong>
+            {{- $data := $.Site.Data.icon -}}
+
+            {{- range .Params.platforms -}}
+                {{- $plat := index $data.platforms . -}}
+                {{ $code := $plat.code }}
+                <img src="/svg/platforms/{{ $code }}.svg" alt="{{ . }}" title="{{ . }}">
+            {{- end }}
+        </div>
+        {{- end -}}
+
+        {{- if .Params.license }}
+        <div class="license-info">
+            <strong>Licença:</strong>
+            <span class="license-text">{{ delimit .Params.license ", " }}</span>
+        </div>
+        {{- end }}
+    </div>
+</section>
+
+{{ if .Params.download -}}
+<section class="card">
+  <div class="card-content">
+    <h3 class="section-title">Download</h3>
+
+    {{- $data := $.Site.Data.icon -}}
+
+    {{- $groups := dict -}}
+    {{- range .Params.download -}}
+      {{- $p := .platform -}}
+      {{- $current := index $groups $p | default (slice) -}}
+      {{- $groups = merge $groups (dict $p ($current | append .)) -}}
+    {{- end -}}
+
+    <div class="download-list">
+      {{- range $platform, $list := $groups -}}
+        {{- $typeCounter := dict -}}
+
+        {{- range $list -}}
+          {{- $provName := .provider | default "Patcheados" -}}
+          {{- $provData := index $data.services $provName -}}
+          {{- $code := $provData.code -}}
+
+          {{- $iconURL := printf "/svg/services/%s.svg" $code -}}
+
+          {{- $type := .type | default "standard" -}}
+          {{- $provider := or $provData.name ($provName | title) -}}
+          {{- $labelType := "" -}}
+
+          {{- if ne $type "standard" -}}
+            {{- $typeLabel := index $.Site.Data.type $type | default ($type | title) -}}
+
+            {{- $variant := .variant | default "" -}}
+            {{- $counterKey := $type -}}
+            {{- if ne $variant "" -}}
+              {{- $counterKey = printf "%s-%s" $type $variant -}}
+            {{- end -}}
+            {{- $count := add (index $typeCounter $counterKey | default 0) 1 -}}
+            {{- $typeCounter = merge $typeCounter (dict $counterKey $count) -}}
+
+            {{- $sameType := where $list "type" $type -}}
+            {{- $sameTypeRegion := where $sameType "region" .region -}}
+            {{- $sameTypeVariant := $sameTypeRegion -}}
+            {{- if ne $variant "" -}}
+              {{- $sameTypeVariant = where $sameTypeRegion "variant" $variant -}}
+            {{- else -}}
+              {{- $sameTypeVariant = where $sameTypeRegion "variant" nil -}}
+            {{- end -}}
+            {{- $total := len $sameTypeVariant -}}
+            {{- if gt $total 1 -}}
+              {{- $labelType = printf "%s #%d" $typeLabel $count -}}
+            {{- else -}}
+              {{- $labelType = $typeLabel -}}
+            {{- end -}}
+          {{- end -}}
+
+          {{- $platformText := $platform -}}
+          {{- if .region -}}
+            {{- $platformText = printf "%s (%s)" $platformText .region -}}
+          {{- end -}}
+
+          {{- $providerText := $provider -}}
+          {{- if .variant -}}
+            {{- $providerText = printf "%s (%s)" $provider .variant -}}
+          {{- end -}}
+          {{- if $labelType -}}
+            {{- $providerText = printf "%s (%s)" $providerText $labelType -}}
+          {{- end -}}
+
+          {{- $text := printf "%s: %s" $platformText $providerText }}
+          <a href="{{ .url }}" target="_blank" class="btn btn-download" data-platform="{{ $platform }}">
+            <img src="{{ $iconURL }}" class="download-icon">
+            <div class="download-text">
+              <span>{{ $text }}</span>
+              {{- if .format }}
+              <span class="download-info">Formato: {{ .format }}</span>
+              {{- end }}
+            </div>
+          </a>
+        {{- end -}}
+      {{- end }}
+    </div>
+
+    {{- $hasAnyHash := false -}}
+    {{- range .Params.download -}}
+      {{- if .sha256 -}}
+        {{- $hasAnyHash = true -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if $hasAnyHash -}}
+    <div class="hash-info">
+      <div class="hash-item">
+        <span class="hash-label">Hash:</span>
+      </div>
+      {{- range $platform, $list := $groups -}}
+        {{- $typeCounter := dict -}}
+
+        {{- range $list -}}
+          {{- if .sha256 -}}
+            {{- $provName := .provider | default "Patcheados" -}}
+            {{- $provData := index $data.services $provName -}}
+            {{- $provider := or $provData.name ($provName | title) -}}
+
+            {{- $type := .type | default "standard" -}}
+            {{- $labelType := "" -}}
+
+            {{- if ne $type "standard" -}}
+              {{- $typeLabel := index $.Site.Data.type $type | default ($type | title) -}}
+
+              {{- $variant := .variant | default "" -}}
+              {{- $counterKey := $type -}}
+              {{- if ne $variant "" -}}
+                {{- $counterKey = printf "%s-%s" $type $variant -}}
+              {{- end -}}
+              {{- $count := add (index $typeCounter $counterKey | default 0) 1 -}}
+              {{- $typeCounter = merge $typeCounter (dict $counterKey $count) -}}
+
+              {{- $sameType := where $list "type" $type -}}
+              {{- $sameTypeRegion := where $sameType "region" .region -}}
+              {{- $sameTypeVariant := $sameTypeRegion -}}
+              {{- if ne $variant "" -}}
+                {{- $sameTypeVariant = where $sameTypeRegion "variant" $variant -}}
+              {{- else -}}
+                {{- $sameTypeVariant = where $sameTypeRegion "variant" nil -}}
+              {{- end -}}
+              {{- $total := len $sameTypeVariant -}}
+
+              {{- if gt $total 1 -}}
+                {{- $labelType = printf "%s #%d" $typeLabel $count -}}
+              {{- else -}}
+                {{- $labelType = $typeLabel -}}
+              {{- end -}}
+            {{- end -}}
+
+            {{- $platformText := $platform -}}
+            {{- if .region -}}
+              {{- $platformText = printf "%s (%s)" $platformText .region -}}
+            {{- end -}}
+
+            {{- $providerText := $provider -}}
+            {{- if .variant -}}
+              {{- $providerText = printf "%s (%s)" $provider .variant -}}
+            {{- end -}}
+            {{- if $labelType -}}
+              {{- $providerText = printf "%s (%s)" $providerText $labelType -}}
+            {{- end -}}
+
+            {{- $final := printf "%s: %s" $platformText $providerText }}
+            <div class="hash-item" data-platform="{{ $platform }}">
+              <span class="hash-label">{{ $final }}:</span>
+              <span class="hash-value">{{ .sha256 }}</span>
+            </div>
+          {{ end -}}
+        {{ end -}}
+      {{ end -}}
+    </div>
+    {{ end -}}
+  </div>
+</section>
+{{- end }}
+
+{{ if .Params.resource -}}
+<section class="card">
+  <div class="card-content">
+    <h3 class="section-title">Recursos</h3>
+    {{ $data := $.Site.Data.icon -}}
+    <div class="patch-resource-list">
+      {{- range sort .Params.resource "name" -}}
+        {{- $provName := .provider | default "Patcheados" -}}
+        {{- $provData := index $data.services $provName -}}
+        {{- $code := $provData.code -}}
+
+        {{- $iconURL := printf "/svg/services/%s.svg" $code }}
+        <a href="{{ .url }}" target="_blank" class="btn btn-patch-resource">
+          <img src="{{ $iconURL }}" class="patch-resource-icon" alt="{{ $provName }}">
+          <div class="patch-resource-text">
+            <span>{{ .name }}</span>
+            {{- if .format }}
+            <span class="patch-resource-info">Formato: {{ .format }}</span>
+            {{- end }}
+          </div>
+        </a>
+      {{ end -}}
+    </div>
+  </div>
+</section>
+{{ end -}}
+
+{{- if .Params.install -}}
+{{- range .Params.install -}}
+<section class="card" data-platform="{{ .platform }}">
+    <div class="card-content">
+        <h3 class="section-title">Instalação</h3>
+        <ol class="description">
+        {{- if reflect.IsSlice .tutorial -}}
+          {{- range .tutorial }}
+          <li>{{ . }}</li>
+          {{- end }}
+        {{- else -}}
+          {{- $preset := index $.Site.Data.install .tutorial -}}
+          {{- range $preset }}
+          <li>{{ . }}</li>
+          {{- end }}
+        {{- end }}
+        </ol>
+    </div>
+</section>
+{{- end }}
+{{- end }}
+
+<section class="card">
+    <div class="card-content">
+        <h3 class="section-title">Informações do Patch</h3>
+        {{- $specs := dict
+            "subs" "Legendas"
+            "graphics" "Gráficos"
+            "dub" "Dublagem"
+        }}
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    {{- range slice "subs" "graphics" "dub" }}
+                        <th>{{ index $specs . }}</th>
+                    {{- end }}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {{- range slice "subs" "graphics" "dub" }}
+                        {{- $value := index $.Params . }}
+                        <td>
+                            {{- if eq $value true -}}
+                                <img src="/svg/ui/circle-check.svg" alt="" title="Traduzido" class="specs-icon specs-icon-yes">
+                            {{- else if eq $value false -}}
+                                <img src="/svg/ui/circle-x.svg" alt="" title="Não Traduzido" class="specs-icon specs-icon-no">
+                            {{- else if eq $value "partial" -}}
+                                <img src="/svg/ui/circle-dot.svg" alt="" title="Parcialmente Traduzido" class="specs-icon specs-icon-partial">
+                            {{- else -}}
+                                <img src="/svg/ui/circle-minus.svg" alt="" title="Indisponível" class="specs-icon">
+                            {{- end -}}
+                        </td>
+                    {{- end }}
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="meta-grid" data-all-downloads='{{ if .Params.download }}{{ jsonify .Params.download }}{{ else }}[]{{ end }}'>
+            {{- $allVersions := slice -}}
+            {{- $allGameVersions := slice -}}
+            {{- $allRegions := slice -}}
+            {{- $allFormats := slice -}}
+            {{- $allReleases := slice -}}
+            {{- $allCompletions := slice -}}
+
+            {{- range .Params.download -}}
+              {{- with .version }}{{ $allVersions = $allVersions | append . }}{{ end -}}
+              {{- with .gameversion }}{{ $allGameVersions = $allGameVersions | append . }}{{ end -}}
+              {{- with .region }}{{ $allRegions = $allRegions | append . }}{{ end -}}
+              {{- with .format }}{{ $allFormats = $allFormats | append . }}{{ end -}}
+              {{- with .release }}{{ $allReleases = $allReleases | append . }}{{ end -}}
+              {{- with .completion }}{{ $allCompletions = $allCompletions | append . }}{{ end -}}
+            {{- end -}}
+
+            {{- $versions := $allVersions | uniq -}}
+            {{- $gameVersions := $allGameVersions | uniq -}}
+            {{- $regions := $allRegions | uniq -}}
+            {{- $formats := $allFormats | uniq -}}
+            {{- $releases := $allReleases | uniq -}}
+            {{- $completions := $allCompletions | uniq }}
+            {{- if gt (len $versions) 0 }}
+            <dl class="meta-item" data-field="version">
+              <dt>Versão:</dt>
+              <dd>{{ delimit $versions ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- if gt (len $gameVersions) 0 }}
+            <dl class="meta-item" data-field="gameversion">
+              <dt>Versão do Jogo:</dt>
+              <dd>{{ delimit $gameVersions ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- if gt (len $regions) 0 }}
+            <dl class="meta-item" data-field="region">
+              <dt>Região do Patch:</dt>
+              <dd>{{ delimit $regions ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- if gt (len $formats) 0 }}
+            <dl class="meta-item" data-field="format">
+              <dt>Formato:</dt>
+              <dd>{{ delimit $formats ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- with .Params.publisher }}
+            <dl class="meta-item">
+              <dt>Distribuidora:</dt>
+              <dd>{{ delimit . ", " }}</dd>
+            </dl>{{ end }}
+            {{- if gt (len $releases) 0 }}
+            <dl class="meta-item" data-field="release">
+              <dt>Data de Lançamento:</dt>
+              <dd>{{ delimit $releases ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- with .Params.status }}
+            <dl class="meta-item">
+              <dt>Status:</dt>
+              <dd>{{ . }}</dd>
+            </dl>{{ end }}
+            {{- if gt (len $completions) 0 }}
+            <dl class="meta-item" data-field="completion">
+              <dt>Conclusão:</dt>
+              <dd>{{ delimit $completions ", " }}</dd>
+            </dl>
+            {{- end }}
+            {{- with .Params.origin -}}
+            {{- $game := $.Site.GetPage (printf "/games/%s" $.Params.game) }}
+            <dl class="meta-item">
+              <dt>Traduzido do:</dt>
+              <dd>{{ . }}{{ if and $game (eq . $game.Params.language) }} (Original){{ end }}</dd>
+            </dl>
+            {{- end }}
+        </div>
+    </div>
+</section>
+
+{{ if .Params.credits -}}
+<section class="card">
+    <div class="card-content">
+        <h3 class="section-title">Créditos</h3>
+        {{- range $role, $authors := .Params.credits }}
+        <div class="credits-section">
+            <h4>{{ $role | title }}</h4>
+            <div class="user-grid">
+            {{- $creditList := slice -}}
+            {{- range $authors -}}
+              {{- $authorName := "" -}}
+              {{- $character := "" -}}
+              {{- $isCircle := false -}}
+
+              {{- if reflect.IsMap . -}}
+                {{- $authorName = .name -}}
+                {{- $character = .character -}}
+                {{- $isCircle = .circle -}}
+              {{- else -}}
+                {{- $authorName = . -}}
+              {{- end -}}
+
+              {{- if $isCircle -}}
+                {{- $circlePage := $.Site.GetPage (printf "/circles/%s" $authorName) -}}
+                {{- if $circlePage }}{{ $creditList = $creditList | append (dict "Page" $circlePage "IsCircle" true "SortTitle" $circlePage.Title) }}{{ end -}}
+              {{- else -}}
+                {{- $authorPage := $.Site.GetPage (printf "/authors/%s" $authorName) -}}
+                {{- if $authorPage }}{{ $creditList = $creditList | append (dict "Page" $authorPage "IsCircle" false "Character" $character "SortTitle" $authorPage.Title) }}{{ end -}}
+              {{- end }}
+            {{- end -}}
+            {{- range sort $creditList "SortTitle" -}}
+              {{- $page := .Page -}}
+              {{- if .IsCircle }}
+                  <a href="{{ $page.RelPermalink }}" class="user-card">
+                    <div class="user-card-info">
+                      <span class="user-card-name">{{ $page.Title }}</span>
+                    </div>
+                  </a>
+              {{- else -}}
+                  <a href="{{ $page.RelPermalink }}" class="user-card">
+                    {{- $avatarFilename := printf "%s.jpg" $page.File.BaseFileName -}}
+                    {{- $avatarPath := printf "static/authors/%s" $avatarFilename -}}
+                    {{ if fileExists $avatarPath }}
+                      <img src="{{ printf "/authors/%s" $avatarFilename | relURL }}" alt="Foto de Perfil de {{ $page.Title }}" loading="lazy">
+                    {{- else }}
+                      <img src="/images/def-author.png" alt="Foto de Perfil Padrão" loading="lazy">
+                    {{- end }}
+                    <div class="user-card-info">
+                      <span class="user-card-name">{{ $page.Title }}</span>
+                      {{- if .Character }}
+                      <span class="user-card-detail">interpretando {{ .Character }}</span>
+                      {{- end }}
+                    </div>
+                  </a>
+              {{ end -}}
+            {{- end -}}
+            </div>
+        </div>
+        {{- end }}
+    </div>
+</section>
+{{- end }}
+
+{{ if .Params.progress -}}
+<section class="card">
+    <div class="card-content">
+        <h3 class="section-title">Progresso</h3>
+        <div class="progress-grid">
+            {{- range .Params.progress }}
+            <div class="progress-card">
+                <div class="progress-header">
+                    <div class="progress-label">{{ .label }}</div>
+                    <div class="progress-percentage">{{ .value }}</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ .value }}"></div>
+                </div>
+            </div>
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end -}}
+
+{{- if .Params.screenshots -}}
+{{- $creators := slice -}}
+
+{{- with $.Params.circle -}}
+  {{- range . -}}
+    {{- $groupPage := $.Site.GetPage (printf "/circles/%s" .) -}}
+    {{- if $groupPage -}}
+      {{- $creators = $creators | append $groupPage.Title -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $.Params.author -}}
+  {{- range . -}}
+    {{- $authorPage := $.Site.GetPage (printf "/authors/%s" .) -}}
+    {{- if $authorPage -}}
+      {{- $creators = $creators | append $authorPage.Title -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $creator := delimit $creators ", " -}}
+
+{{- $Title := "" -}}
+{{- if $.Params.title -}}
+  {{- $Title = $.Params.title -}}
+{{- else -}}
+  {{- $gamePage := $.Site.GetPage (printf "/games/%s" $.Params.game) -}}
+  {{- $Title = $gamePage.Title -}}
+{{- end }}
+
+<section class="card">
+    <div class="card-content">
+        <h3 class="section-title">Galeria</h3>
+        <div class="gallery-grid">
+            {{- range .Params.screenshots -}}
+            {{- $path := printf "/games/%s/%s/%s" $.Params.game $.File.BaseFileName . }}
+            <img src="{{ $path | relURL }}" alt="Prévia de {{ $Title }} traduzido por {{ $creator }}" loading="lazy">
+            {{- end }}
+        </div>
+    </div>
+</section>
+{{- end }}
+
+<section class="card">
+  <div class="card-content">
+    <h3 class="section-title">Comentários</h3>
+    <div class="giscus"></div>
+  </div>
+</section>

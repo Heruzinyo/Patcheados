@@ -1,0 +1,30 @@
+baseURL: "https://heruzinyo.github.io/Patcheados/"
+languageCode: "pt-br"
+title: "Patcheados"
+disablePathToLower: true
+defaultContentLanguage: "pt-br"
+enableRobotsTXT: true
+
+permalinks:
+  games: "/Jogos/:filename/"
+  circles: "/Circulos/:filename/"
+  authors: "/Autores/:filename/"
+  resources: "/Recursos/:filename/"
+
+taxonomies:
+  # tag: "tags"
+  # category: "categories"
+
+outputs:
+  home: 
+    - "HTML"
+    - "RSS"
+  section:
+    - "HTML"
+  taxonomy:
+    - "HTML"
+  term:
+    - "HTML"
+
+minify:
+  minifyOutput: true

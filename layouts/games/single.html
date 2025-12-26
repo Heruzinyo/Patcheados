@@ -1,0 +1,149 @@
+{{ define "main" }}
+{{ partial "pagefind.html" (dict "page" . "type" "games" "site" .Site) }}
+<h2>{{ .Title }}</h2>
+<div class="content">
+    <aside class="sidebar">
+        <div class="card">
+            <img src="/games/{{ .File.BaseFileName }}/grid.jpg" alt="Capa de {{ .Title }}" class="game-image">
+            {{- if .Params.platforms }}
+            <div class="platform-icons">
+                {{ $data := $.Site.Data.icon -}}
+            
+                {{- range .Params.platforms -}}
+                {{- $plat := index $data.platforms . -}}
+                {{- $code := $plat.code -}}
+            
+                <img src="/svg/platforms/{{ $code }}.svg" alt="{{ . }}" title="{{ . }}">
+                {{ end -}}
+            </div>
+            {{- end }}
+        </div>
+        {{- if .Params.nsfw }}
+        <div class="warning-box">
+            <img src="/svg/ui/triangle-alert.svg" alt="" class="warning-icon">
+            <span>Esse jogo pode conter conteúdo sensível ou não ser adequado para visualização no trabalho.</span>
+        </div>
+        {{ end }}
+        <div class="card">
+            <div class="card-content">
+                <h3 class="section-title">Informações do Jogo</h3>
+                <dl class="info-list">
+                    {{ with .Params.version }}<div><dt>Versão:</dt><dd>{{ . }}</dd></div>{{ end }}
+                    {{ with .Params.region }}<div><dt>Região:</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+                    {{ with .Params.developer }}<div><dt>Desenvolvedora:</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+                    {{ with .Params.publisher }}<div><dt>Distribuidora:</dt><dd>{{ delimit . ", " }}</dd></div>{{ end }}
+                    {{ with .Params.release }}<div><dt>Data de Lançamento:</dt><dd>{{ . }}</dd></div>{{ end }}
+                    {{ with .Params.players }}<div><dt>Jogadores:</dt><dd>{{ . }}</dd></div>{{ end }}
+                </dl>
+            </div>
+        </div>
+        {{- if .Params.tags }}
+        <div class="card">
+            <div class="card-content">
+                <h3 class="section-title">Tags</h3>
+                <div class="tags">
+                    {{- range .Params.tags }}
+                    <a href="/Jogos/?q=tag:{{ . | urlquery }}" class="tag tag-search">{{ . }}</a>
+                    {{- end }}
+                </div>
+            </div>
+        </div>
+        {{- end }}
+        {{- if .Params.sns }}
+        <div class="card">
+            <div class="card-content">
+                <h3 class="section-title">Páginas Oficiais</h3>
+                <div class="btn-group">
+                    {{- range .Params.sns -}}
+                    {{- $icon := index site.Data.icon.services .name -}}
+                    {{- $code := $icon.code }}
+                    <a href="{{ .url }}" target="_blank" class="btn">
+                        <img src="/svg/services/{{ $code }}.svg" alt="">
+                        {{ .name }}
+                    </a>
+                    {{- end }}
+                </div>
+            </div>
+        </div>
+        {{- end }}
+    </aside>
+    <div class="main-content">
+        <section class="card">
+            <div class="card-content">
+                <div class="description">
+                  {{ .Content -}}
+                </div>
+            </div>
+        </section>
+
+        {{- $gameName := .File.BaseFileName -}}
+        {{- $patches := where (where .Site.RegularPages "Type" "patches") ".Params.game" $gameName -}}
+
+        {{- $allPlatforms := slice -}}
+        {{- range $patches -}}
+          {{- range .Params.platforms -}}
+            {{- $allPlatforms = $allPlatforms | append . -}}
+          {{- end -}}
+        {{- end -}}
+        {{- $uniquePlatforms := $allPlatforms | uniq -}}
+
+        <select id="platformSelect">
+          <option value="" disabled selected hidden>Selecionar plataforma</option>
+          <option value="all">Todas as plataformas</option>
+          {{- range $uniquePlatforms }}
+            <option value="{{ . }}">{{ . }}</option>
+          {{- end }}
+        </select>
+        <select id="patchSelect" disabled>
+          <option value="" disabled selected hidden>Selecionar patch</option>
+        </select>
+        <template id="patchSummaries" data-base-file-name="{{ .File.BaseFileName }}">
+          {{- range $patches -}}
+            {{- $creators := slice -}}
+                    
+            {{- with .Params.circle -}}
+              {{- range . -}}
+                {{- $groupPage := $.Site.GetPage (printf "/circles/%s" .) -}}
+                {{- if $groupPage -}}
+                  {{- $creators = $creators | append $groupPage.Title -}}
+                {{- end -}}
+              {{- end -}}
+            {{- end -}}
+                    
+            {{- with .Params.author -}}
+              {{- range . -}}
+                {{- $authorPage := $.Site.GetPage (printf "/authors/%s" .) -}}
+                {{- if $authorPage -}}
+                  {{- $creators = $creators | append $authorPage.Title -}}
+                {{- end -}}
+              {{- end -}}
+            {{- end -}}
+                    
+            {{- $creatorName := delimit $creators ", " -}}
+
+            {{- $displayTitle := $creatorName -}}
+            {{- if .Params.title -}}
+              {{- if eq .Params.title_type "translation" -}}
+                {{- $displayTitle = printf "%s - %s" $creatorName .Params.title -}}
+              {{- else if eq .Params.title_type "version" -}}
+                {{- $displayTitle = printf "%s (%s)" $creatorName .Params.title -}}
+              {{- end -}}
+            {{- end -}}
+            <div class="patch-summary"
+                 data-id="{{ .File.BaseFileName }}"
+                 data-platforms="{{ delimit .Params.platforms "," }}"
+                 data-title="{{ $displayTitle }}"
+                 data-official="{{ if eq .Params.official true }}true{{ end }}"
+                 data-mtl="{{ if eq .Params.mtl true }}true{{ end }}"
+                 data-ai-dub="{{ if eq .Params.ai_dub true }}true{{ end }}"
+                 data-external="{{ if eq .Params.external true }}true{{ end }}">
+              {{- .Render "summary" }}
+            </div>
+          {{- end }}
+        </template>
+        <div id="patchDisplay"></div>
+        {{- $selector := resources.Get "js/selector.js" | minify | fingerprint -}}
+        <script src="{{ $selector.RelPermalink }}"></script>
+    </div>
+</div>
+{{ end }}
