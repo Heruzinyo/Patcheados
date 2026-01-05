@@ -1,0 +1,47 @@
+---
+game: "Danganronpa_2_Goodbye_Despair"
+circle:
+  - "Kibou_Project"
+title: "Danganronpa 2: Adeus Academia do Desespero"
+title_type: translation
+platforms:
+  - "PC"
+status: "Concluído"
+origin: "Inglês"
+subs: true
+graphics: true
+dub: false
+credits:
+  "Edição Gráfica":
+    - "YanDM"
+    - "Kasashi"
+    - "Ashua"
+  "Revisão":
+    - "YanDM"
+    - "Magall"
+    - "Plot"
+  "Tradução":
+    - "YanDM"
+    - "xRitsu"
+    - "Magall"
+  "Tradução (Extras/Novel)":
+    - "jolinha"
+    - "Bit"
+    - "Sominterre"
+    - "MVDA"
+    - "Razzee"
+    - "Caio Felipe"
+    - "Chip"
+    - "Caminar"
+    - "Panzerforge"
+progress:
+  - label: "História Principal"
+    value: "100%"
+  - label: "Extras"
+    value: "100%"
+  - label: "Gráficos"
+    value: "100%"
+screenshots: []
+---
+
+*"Quero encontrar a ilha desconhecida, quero saber quem sou quando nela estiver."*
