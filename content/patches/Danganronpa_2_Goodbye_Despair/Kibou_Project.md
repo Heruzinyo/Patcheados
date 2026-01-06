@@ -1,8 +1,8 @@
 ---
-game: "Danganronpa_Trigger_Happy_Havoc"
+game: "Danganronpa_2_Goodbye_Despair"
 circle:
   - "Kibou_Project"
-title: "Danganronpa 1: A Academia da Esperança e os Colegiais do Desespero"
+title: "Danganronpa 2: Adeus Academia do Desespero"
 title_type: translation
 platforms:
   - "PC"
@@ -13,32 +13,41 @@ graphics: true
 dub: false
 credits:
   "Edição Gráfica":
-    - "Risu"
     - "YanDM"
+    - "Kasashi"
+    - "Ashua"
   "Revisão":
+    - "YanDM"
+    - "Magall"
     - "Plot"
-    - "Risu"
-    - "SushiJoji"
-    - "YanDM"
   "Tradução":
-    - "Risu"
-    - "SushiJoji"
     - "YanDM"
-    - "サントス"
+    - "xRitsu"
+    - "Magall"
+  "Tradução (Extras/Novel)":
+    - "jolinha"
+    - "Bit"
+    - "Sominterre"
+    - "MVDA"
+    - "Razzee"
+    - "Caio_Felipe"
+    - "Chip"
+    - "Caminar"
+    - "Panzerforge"
 download:
   - platform: "PC"
     provider: "GitHub"
     format: "Instalador"
-    version: "2.2025-3"
+    version: "4.2025-3"
     gameversion: "1.0"
     region: "GLOBAL"
     completion: "100%"
-    release: "25/06/2020"
+    release: "27/08/2018"
     url: "https://github.com/Kibou-Project/Danganronpa-PTBR-Translations/releases/tag/v0.2"
 resource:
   - name: "Guia na Steam"
     provider: "Steam"
-    url: "https://steamcommunity.com/sharedfiles/filedetails/?id=3487517646"
+    url: "https://steamcommunity.com/sharedfiles/filedetails/?id=3487539806"
 install:
   - platform: "PC"
     tutorial: generic_installer
@@ -49,12 +58,6 @@ progress:
     value: "100%"
   - label: "Gráficos"
     value: "100%"
-screenshots:
-  - "screenshot1.jpg"
-  - "screenshot2.jpg"
-  - "screenshot3.jpg"
-  - "screenshot4.jpg"
-  - "screenshot5.jpg"
 ---
 
-*"Aquele que vence os próprios medos será verdadeiramente livre."*
+*"Quero encontrar a ilha desconhecida, quero saber quem sou quando nela estiver."*

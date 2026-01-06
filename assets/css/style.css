@@ -25,6 +25,7 @@
   --warning-light: oklch(0.96 0.05 20);
   --warning-filter: invert(44%) sepia(82%) saturate(362%) hue-rotate(308deg) brightness(112%) contrast(101%);
   --sub-light: oklch(0.96 0.05 310);
+  --sub2-light: oklch(0.96 0.05 360);
 
   /* Spacing */
   --space-xs: 4px;
@@ -493,6 +494,10 @@ main {
 
 .tag-wip {
   background: var(--sub-light);
+}
+
+.tag-alpha {
+  background: var(--sub2-light);
 }
 
 .tag-hiatus {

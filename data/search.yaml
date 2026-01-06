@@ -18,6 +18,7 @@ tags:
   girls_love: [gl, yuri]
   gratuito: [f2p, freeware]
   indie: [independente]
+  investigação: [investigation, detective]
   jrpg: []
   licenciado: []
   luta: [fighting]
@@ -113,6 +114,7 @@ roles:
 status:
   Concluído: [complete, concluido]
   Em_Desenvolvimento: [work_in_progress, wip]
+  Alpha: []
   Pausado: [hiatus]
   Cancelado: [cancelled]
 

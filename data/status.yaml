@@ -2,6 +2,8 @@
   class: completed
 "Em Desenvolvimento":
   class: wip
+"Alpha":
+  class: alpha
 "Pausado":
   class: hiatus
 "Cancelado":

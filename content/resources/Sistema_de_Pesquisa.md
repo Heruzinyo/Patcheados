@@ -172,6 +172,14 @@ Jogos independentes.
 
 ---
 
+### investigação
+
+Jogos onde o foco é a resolução de mistérios através de coleta de pistas.
+
+**pseudônimos:** `investigation`, `detective`
+
+---
+
 ### jrpg
 
 RPGs no estilo japonês.
@@ -808,6 +816,7 @@ Esses são os termos que você pode usar para os filtros.
   - **pseudônimos:** `complete`, `concluido`
 * `Em_Desenvolvimento`
   - **pseudônimos:** `work_in_progress`, `wip`
+* `Alpha`
 * `Pausado`
   - **pseudônimos:** `hiatus`
 * `Cancelado`
