@@ -75,6 +75,8 @@ platforms:
     code: package
   "Meta Quest 2":
     code: package
+  "WonderSwan":
+    code: package
 
 services:
   "4shared":
