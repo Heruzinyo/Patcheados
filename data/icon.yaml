@@ -105,6 +105,8 @@ services:
     code: googledrive
   "Google Play":
     code: googleplay
+  "Hugging Face":
+    code: huggingface
   "Instagram":
     code: instagram
   "Internet Archive":
@@ -133,6 +135,8 @@ services:
     code: globe
   "Steam":
     code: steam
+  "Telegram":
+    code: telegram
   "Tumblr":
     code: tumblr
   "Twitter":

@@ -1,0 +1,153 @@
+---
+game: "Berserk_Millennium_Falcon_Hen_Seima_Senki_no_Shou"
+circle:
+  - "Digi-Translations"
+  - "Matizhill"
+  - "Maxima-Dub"
+title: "Berserk: Arco do Falcão Milenar Saga da Guerra Santa dos Demônios"
+title_type: translation
+platforms:
+  - "Sony PlayStation 2"
+status: "Concluído"
+origin: "Inglês"
+subs: true
+graphics: true
+dub: true
+credits:
+  "Agradecimentos Especiais":
+    - "denim"
+    - "Joapeer"
+    - "Kuroi"
+    - "Mumm-Ra"
+  "Direção de Dublagem":
+    - "O_Lado_Nerd_Obscuro"
+    - "Pedro_Hanma"
+  "Dublagem":
+    - name: "Alexandre_Filho"
+      character: "Serpico"
+    - name: "Ashley"
+      character: "Ivalera"
+    - name: "Bibi"
+      character: "Caska"
+    - name: "Gaspar_Dutra"
+      character: "Morgan"
+    - name: "Helton_Luiz"
+      character: "Pippin"
+    - name: "Henrique_Joestar"
+      character: "Isidro"
+    - name: "Isaac_Boltzin"
+      character: "Puck"
+    - name: "Jederson_Fagner"
+      character: "Skull Knight"
+    - name: "Juu_ツ"
+      character: "Schierk"
+    - name: "Mamoru_Yamane"
+      character: "Ubik"
+    - name: "MaquinaDubs"
+      character: "Griffith"
+    - name: "Matheus_Magnani"
+      character: "Void"
+    - name: "Miruna_Mei"
+      character: "Farnese"
+    - name: "Miss_Voice"
+      character: "Slan"
+    - name: "Nicolas_Cardoso"
+      character: "Judeau"
+    - name: "O_Lado_Nerd_Obscuro"
+      character: "Guts"
+    - name: "Pedro_Hanma"
+      character: "Zodd"
+    - name: "Rosa_Meira_Jr"
+      character: "Flora"
+    - name: "Samuel_R_Silva"
+      character: "Grunbeld"
+    - name: "Vanderson_Padilha"
+      character: "Charles"
+    - name: "Wesley_Vieira"
+      character: "Corkus"
+  "Edição de Vídeo":
+    - "Jv132"
+    - "Sora_Leon"
+  "Edição Gráfica":
+    - "Jv132"
+    - "Mysteriozo"
+    - "Sora_Leon"
+  "Elenco de Apoio":
+    - "João_Davi"
+    - "Moisés_Andrade"
+    - "Nádia_Santos"
+    - "O_Lado_Nerd_Obscuro"
+    - "Pedro_Hanma"
+  "Ferramentas":
+    - "Luke"
+    - "Mumm-Ra"
+    - "Sora_Leon"
+    - "Zungle"
+  "Modding":
+    - "Sora_Leon"
+  "Revisão":
+    - "Huskie"
+  "Tradução":
+    - "Cobra_Sólida"
+    - "Fukurokujin"
+    - "Grand"
+    - "GuroMedia"
+    - "Sora_Leon"
+download:
+  - platform: "Sony PlayStation 2"
+    provider: "Hugging Face"
+    format: "xdelta"
+    version: "1.0"
+    gameversion: "1.0"
+    region: "Japan"
+    completion: "100%"
+    release: "30/07/2024"
+    url: "https://joao13traducoes.com/2025/10/ps2-berserk-millennium-falcon-hen-seima-senki-no-shou-traduzido-e-dublado-digi-translators-e-cia/"
+    archive: true
+  - platform: "Sony PlayStation 2"
+    provider: "MEGA"
+    variant: "Sem Dublagem"
+    format: "xdelta"
+    version: "1.1"
+    gameversion: "1.0"
+    region: "Japan"
+    completion: "100%"
+    release: "21/07/2024"
+    url: "https://mega.nz/file/dmImBJiC#hX0sIUnnBQQo14wIzaSQ_71cdIihN3rkVlW_9gndSzMe"
+resource:
+  - name: "Post de Lançamento"
+    provider: "Site"
+    url: "https://digi-translations.blogspot.com/2023/10/ps2-berserk-millennium-falcon-hen-seima.html"
+install:
+  - platform: "Sony PlayStation 2"
+    tutorial: generic_xdelta
+license:
+  - "Uso Comercial: Proibido"
+  - "Redistribuição: Permitida"
+  - "Créditos: Obrigatórios"
+  - "Edições: Proibidas"
+progress:
+  - label: "Textos nas Cenas"
+    value: "100%"
+  - label: "Textos da História:"
+    value: "100%"
+  - label: "Textos em Secundários"
+    value: "100%"
+  - label: "Legendas em Vídeos"
+    value: "100%"
+  - label: "Menus"
+    value: "100%"
+  - label: "Imagens"
+    value: "100%"
+  - label: "Texturas"
+    value: "100%"
+  - label: "Revisões"
+    value: "100%"
+screenshots:
+  - "screenshot1.jpg"
+  - "screenshot2.jpg"
+  - "screenshot3.jpg"
+  - "screenshot4.jpg"
+---
+
+Feita com a colaboração de Matizhill e Maxima-Dub.

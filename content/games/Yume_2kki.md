@@ -17,6 +17,7 @@ sns:
   - name: "Site"
     url: "https://wikiwiki.jp/yumenikki-g3/"
 tags:
+  - "exploração"
   - "fangame"
   - "gratuito"
   - "indie"

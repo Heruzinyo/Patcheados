@@ -19,6 +19,7 @@ sns:
   - name: "Site"
     url: "http://www3.nns.ne.jp/pri/tk-mto/kikiyamaHP.html"
 tags:
+  - "exploração"
   - "gratuito"
   - "indie"
   - "rpg"

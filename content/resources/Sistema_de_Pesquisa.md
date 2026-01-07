@@ -36,6 +36,12 @@ Jogos focados em exploração e narrativa.
 
 ---
 
+### beat_em_up
+
+Jogos focados em combate corpo a corpo contra hordas de inimigos em fases de rolagem lateral
+
+---
+
 ### boys_love
 
 Conteúdo com foco em romance entre personagens masculinos.
@@ -104,6 +110,14 @@ Jogos focados em planejamento e tomada de decisões.
 
 ---
 
+### exploração
+
+Jogos focados em movimento e interação com o ambiente.
+
+**pseudônimos:** `exploration`, `walking_simulator`, `exploracao`
+
+---
+
 ### fangame
 
 Jogos feitos por fãs, baseados em obras já existentes.
@@ -169,6 +183,12 @@ Conteúdo com foco em romance entre personagens femininas.
 Jogos que podem ser jogados de forma gratuita, total ou majoritariamente (não incluí demos).
 
 **pseudônimos:** `f2p`, `freeware`
+
+---
+
+### hack_and_slash
+
+Jogos focados em combate corpo a corpo rápido, violento e em grande escala.
 
 ---
 
@@ -334,7 +354,7 @@ Jogos focados em situações do dia a dia.
 
 ---
 
-### survival
+### sobrevivência
 
 Jogos focados em sobrevivência e coleta de recursos.
 
