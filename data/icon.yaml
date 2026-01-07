@@ -87,6 +87,8 @@ services:
     code: bluesky
   "Carrd":
     code: carrd
+  "Crowdin":
+    code: crowdin
   "Discord":
     code: discord
   "Dropbox":
@@ -97,6 +99,8 @@ services:
     code: gamebanana
   "GitHub":
     code: github
+  "GOG.com":
+    code: gogdotcom
   "Google Drive":
     code: googledrive
   "Google Play":
@@ -111,15 +115,19 @@ services:
     code: mediafire
   "MEGA":
     code: mega
-  "PO.B.R.E.":
-    code: link
+  "Minecraft":
+    code: minecraft
   "Patcheados":
     code: download
+  "Pixeldrain":
+    code: pixeldrain
+  "PO.B.R.E.":
+    code: link
   "Reddit":
     code: reddit
   "Romhacking.net.br":
     code: link
-  "SharedMods":
+  "ShareMods":
     code: link
   "Site":
     code: globe

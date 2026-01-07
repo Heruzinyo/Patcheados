@@ -44,6 +44,14 @@ Conteúdo com foco em romance entre personagens masculinos.
 
 ---
 
+### cartas
+
+Jogos baseados em cartas.
+
+**pseudônimos:** `deckbuilding`
+
+---
+
 ### casual
 
 Jogos simples, fáceis de aprender e jogar.
@@ -232,6 +240,12 @@ Jogos focados em pulo e precisão de movimento.
 
 ---
 
+### point_and_click
+
+Jogos onde se usa o mouse para controlar um personagem ou interagir com o ambiente.
+
+---
+
 ### puzzle
 
 Jogos focados em quebra-cabeças.
@@ -292,6 +306,12 @@ Jogos de estratégia em tempo real.
 
 ---
 
+### sandbox
+
+Jogos com grande liberdade de exploração e criação.
+
+---
+
 ### sci-fi
 
 Jogos com temática de ficção científica.
@@ -311,6 +331,14 @@ Jogos que simulam atividades ou sistemas reais.
 ### slice_of_life
 
 Jogos focados em situações do dia a dia.
+
+---
+
+### survival
+
+Jogos focados em sobrevivência e coleta de recursos.
+
+**pseudônimos:** `survival`
 
 ---
 

@@ -9,7 +9,7 @@ release: "26/05/2007"
 version: "0.128h"
 region:
   - "GLOBAL"
-players: ""
+players: "1"
 platforms:
   - "PC"
   - "Web"
