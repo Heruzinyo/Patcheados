@@ -8,6 +8,10 @@ generic_pc_mod:
   - "Abra o jogo."
   - "No menu de configurações (settings), procure pelas opções de idioma (language) e coloque em \"Português\"."
 
+generic_pc_full:
+  - "Extraia o arquivo .zip/.rar do patch."
+  - "Rode o executável para começar a jogar!"
+
 generic_installer:
   - "Siga as instruções do instalador para aplicar o patch."
   

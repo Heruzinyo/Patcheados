@@ -99,6 +99,8 @@ services:
     code: facebook
   "GameBanana":
     code: gamebanana
+  "Game Jolt":
+    code: gamejolt
   "GitHub":
     code: github
   "GOG.com":
