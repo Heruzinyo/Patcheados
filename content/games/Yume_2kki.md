@@ -6,7 +6,7 @@ developer:
 publisher:
   - "20"
 release: "26/05/2007"
-version: "0.128h"
+version: "0.128i"
 region:
   - "GLOBAL"
 players: "1"

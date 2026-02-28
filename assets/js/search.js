@@ -117,7 +117,7 @@ class SearchSystem {
         'lançamento': 'release', 'patchlancamento': 'patchrelease', 'patchlançamento': 'patchrelease',
         'jogadores': 'players', 'legendas': 'subs', 'graficos': 'graphics', 'gráficos': 'graphics',
         'dublagem': 'dub', 'oficial': 'official', 'reupload': 'archive', 'machine_translation': 'mtl',
-        'dub_ia': 'ai_dub', 'externo': 'external'
+        'externo': 'external'
       };
       if (keyMap[key]) key = keyMap[key];
 
@@ -292,7 +292,6 @@ class SearchSystem {
       case 'language':
       case 'archive':
       case 'mtl':
-      case 'ai_dub':
       case 'external':
       case 'lost_source':
       case 'lost_media':

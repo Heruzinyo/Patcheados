@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "hugo && pagefind --site public",
-    "dev": "hugo && pagefind --site public --serve"
+    "dev": "hugo --baseURL http://localhost:1414/ && pagefind --site public --serve"
   },
   "devDependencies": {
     "pagefind": "^1.4.0"

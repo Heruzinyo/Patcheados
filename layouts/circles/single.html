@@ -82,9 +82,6 @@
                 {{- if eq .Params.mtl true -}}
                     {{- $warningTags = printf "%s[MTL] " $warningTags -}}
                 {{- end -}}
-                {{- if eq .Params.ai_dub true -}}
-                    {{- $warningTags = printf "%s[Dub IA] " $warningTags -}}
-                {{- end -}}
                 {{- if eq .Params.external true -}}
                     {{- $warningTags = printf "%s[EXT] " $warningTags -}}
                 {{- end -}}

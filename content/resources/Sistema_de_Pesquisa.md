@@ -680,16 +680,6 @@ Use este parâmetro para filtrar por patches traduzidos por máquina.
 
 ---
 
-**parâmetro:** `dub_ia:`
-
-Use este parâmetro para filtrar por patches com dublagem por inteligência artificial.
-
-**pseudônimos:** `ai_dub:`
-
-**valores:** `estado`
-
----
-
 **parâmetro:** `externo:`
 
 Use este parâmetro para filtrar por patches disponibilizados de forma externa ao jogo.

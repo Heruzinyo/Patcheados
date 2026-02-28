@@ -6,7 +6,7 @@ developer:
 publisher:
   - "ProjectMoon"
 release: "26/02/2023"
-version: "1.94.0"
+version: "1.99.1"
 region:
   - "GLOBAL"
 players: "1"

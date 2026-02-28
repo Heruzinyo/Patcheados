@@ -90,6 +90,35 @@ Resumindo: se a **modificação foi criada por fãs** e **altera algo relacionad
 
 ---
 
+**Dublagem por IA é permitida?**
+
+Não. Traduções que utilizam dublagem gerada por inteligência artificial generativa não são permitidas no site.
+
+Embora anteriormente houvesse suporte para esse tipo de patch, a política foi revisada considerando a falta de consentimento das vozes utilizadas como base para os modelos de IA.
+
+---
+
+**Por que MTL é permitida então?**
+
+Nem toda MTL envolve IA generativa. Embora muitas traduções MTL apresentem qualidade inferior, existem casos em que determinados jogos apenas possuem esse tipo de tradução disponível. Por esse motivo, foi decidido permitir MTL. No entanto, traduções marcadas como MTL são automaticamente classificadas abaixo de traduções feitas manualmente.
+
+---
+
+**Quais são os critérios que impedem a adição de um patch no site?**
+
+O site não permite a adição de patches ou círculos/autores que:
+- Utilizem paywall para acesso ao patch.
+- Redistribuam patches sem autorização.
+- Descumpram licenças.
+- Atuem de forma maliciosa ou de má-fé.
+
+O descumprimento dessas diretrizes pode resultar em remoção imediata do conteúdo e banimento do círculo/autor.
+
+Abaixo está a lista de círculos/autores que estão proibidos de ter seu conteúdo no site, acompanhados do respectivo motivo.
+- **Traduções PKG / Team PKG**: [Paywall e práticas de má-fé](https://x.com/PHSticks/status/1751390898384949689).
+
+---
+
 **Quero pedir para adicionar/alterar um jogo, patch, autor ou círculo**
 
 Você pode abrir um pedido de adição/alteração [aqui](https://github.com/Heruzinyo/Patcheados/issues/new/choose).

@@ -2,6 +2,7 @@
 title: "ScummBR"
 members:
   - "Diego_DJ_Souza"
+  - "Euridice_Santos"
   - "Jinn"
   - "RafaelGC"
 sns:

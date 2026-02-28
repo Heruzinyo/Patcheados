@@ -63,7 +63,6 @@
       {{- end -}}
     {{- end -}}
     {{- $allMTL = $allMTL | append (cond (eq .Params.mtl true) "true" "false") -}}
-    {{- $allAIDub = $allAIDub | append (cond (eq .Params.ai_dub true) "true" "false") -}}
     {{- $allExternal = $allExternal | append (cond (eq .Params.external true) "true" "false") -}}
     {{- $allLostSource = $allLostSource | append (cond (eq .Params.lost_source true) "true" "false") -}}
     {{- $allLostMedia = $allLostMedia | append (cond (eq .Params.lost_media true) "true" "false") -}}
@@ -162,7 +161,6 @@
   {{- $filters = merge $filters (dict "players" ($page.Params.players | default 0)) -}}
   {{- $filters = merge $filters (dict "nsfw" ($page.Params.nsfw | default false)) -}}
   {{- $filters = merge $filters (dict "mtl" ($allMTL | uniq)) -}}
-  {{- $filters = merge $filters (dict "ai_dub" ($allAIDub | uniq)) -}}
   {{- $filters = merge $filters (dict "external" ($allExternal | uniq)) -}}
   {{- $filters = merge $filters (dict "lost_source" ($allLostSource | uniq)) -}}
   {{- $filters = merge $filters (dict "lost_media" ($allLostMedia | uniq)) -}}
