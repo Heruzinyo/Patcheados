@@ -95,6 +95,8 @@ services:
     code: discord
   "Dropbox":
     code: dropbox
+  "eShop":
+    code: cib-nintendo
   "Facebook":
     code: facebook
   "GameBanana":

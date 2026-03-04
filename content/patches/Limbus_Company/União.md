@@ -48,7 +48,7 @@ install:
   - platform: "PC"
     tutorial:
       - "Baixe o arquivo diretamente do repositório."
-      - "Crie uma pasta chamada \"Lang\" em \"Limbus Company\LimbusCompany_Data\"."
+      - "Crie uma pasta chamada \"Lang\" em \"Limbus Company\\LimbusCompany_Data\"."
       - "Extraia o .zip \"Uniao\" e coloque os arquivos \"Português-Brasil\" e \"config.json\" dentro da pasta \"Lang\"."
       - "Abra Limbus Company e clique na opção \"Select Custom Language\" e selecione \"Português-Brasil\"."
       - "Reinicie o jogo."
