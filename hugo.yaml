@@ -4,6 +4,7 @@ title: "Patcheados"
 disablePathToLower: true
 defaultContentLanguage: "pt-br"
 enableRobotsTXT: true
+relativeURLs: true
 
 permalinks:
   games: "/Jogos/:filename/"
