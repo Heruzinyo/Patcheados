@@ -57,13 +57,30 @@ progress:
   - label: "História Principal"
     value: "100%"
 screenshots:
-  - "screenshot1.jpg"
-  - "screenshot2.jpg"
-  - "screenshot3.jpg"
-  - "screenshot4.jpg"
-  - "screenshot5.jpg"
-  - "screenshot6.jpg"
+  - "N43vp.jpg"
+  - "Ykcnf.jpg"
+  - "zTpv7.jpg"
+  - "tYhyh.jpg"
+  - "ONpK7.jpg"
+  - "ufWGY.jpg"
+  - "Z4Yp8.jpg"
+  - "SMcSg.jpg"
+  - "qcMxr.jpg"
+  - "u8Mrm.jpg"
+  - "v2HH6.jpg"
+  - "f14OS.jpg"
+  - "lzEp1.jpg"
+  - "EXZIz.jpg"
+  - "8VzoC.jpg"
+  - "7k5nx.jpg"
+  - "i4JZn.jpg"
+  - "YR1a6.jpg"
+  - "Dt1Q3.jpg"
+  - "8vikP.jpg"
+  - "CrIWa.jpg"
 ---
+
+![Capa Customizada](/games/Sam_&_Max_Hit_the_Road/ScummBR/nKkc2.png)
 
 Este é o patch de tradução para português do adventure Sam and Max Hit the Road - e funciona plenamente com a versão CD original do game, com áudio e legendas em inglês. NÃO garantimos o seu funcionamento com outras versões do jogo.
 

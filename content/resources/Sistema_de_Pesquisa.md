@@ -122,6 +122,8 @@ Jogos focados em movimento e interação com o ambiente.
 
 Jogos feitos por fãs, baseados em obras já existentes.
 
+**pseudônimos:** `doujin`
+
 ---
 
 ### fantasia
@@ -814,6 +816,7 @@ Esses são os termos que você pode usar para os filtros.
 * `SEGA_Dreamcast`
 * `Meta_Quest`
 * `Meta_Quest_2`
+* `WonderSwan`
 
 ---
 
@@ -824,13 +827,22 @@ Esses são os termos que você pode usar para os filtros.
   - **pseudônimos:** `animation`
 * `Arte`
   - **pseudônimos:** `art`
+* `ASM`
 * `Colaboração`
+* `Compressão`
+* `Consultoria`
 * `Controle_de_Qualidade`
 * `Conversão_de_Assets`
 * `Direção`
+* `Direção_de_Dublagem`
+* `Documentação`
 * `Dublagem`
   - **pseudônimos:** `dub`
+* `Edição_3D`
+* `Edição_de_Vídeo`
 * `Edição_Gráfica`
+* `Edição_Textual`
+* `Elenco_de_Apoio`
 * `Ferramentas`
 * `Modding`
 * `Organização`
@@ -840,6 +852,7 @@ Esses são os termos que você pode usar para os filtros.
   - **pseudônimos:** `programming`
 * `Revisão`
   - **pseudônimos:** `proofreading`
+* `Suporte`
 * `Testes`
   - **pseudônimos:** `testing`
 * `Tradução`
@@ -867,8 +880,13 @@ Esses são os termos que você pode usar para os filtros.
 * `GLOBAL`
 * `USA`
 * `Europe`
-* `Japan`
 * `Germany`
+* `Australia`
+* `Japan`
+* `China`
+* `Korea`
+* `Taiwan`
+* `SEA`
 
 ---
 

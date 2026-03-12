@@ -119,6 +119,8 @@ services:
     code: internetarchive
   "itch.io":
     code: itchdotio
+  "Ko-fi":
+    code: kofi
   "MediaFire":
     code: mediafire
   "MEGA":
@@ -127,6 +129,8 @@ services:
     code: minecraft
   "Patcheados":
     code: download
+  "Patreon":
+    code: patreon
   "Pixeldrain":
     code: pixeldrain
   "PO.B.R.E.":
@@ -145,6 +149,8 @@ services:
     code: telegram
   "Tumblr":
     code: tumblr
+  "VNDB":
+    code: link
   "Twitter":
     code: twitter
   "YouTube":

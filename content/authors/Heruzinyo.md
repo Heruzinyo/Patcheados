@@ -8,3 +8,7 @@ sns:
 ---
 
 Tradutor de jogos furry, e a pessoa que criou esse site.
+
+Gosto do Mine Raru e de Sam & Max ~~e do koronba também~~.
+
+Icon: [hwljpg](https://hwljpg.tumblr.com/post/737656767705743360/quick-doodles).
