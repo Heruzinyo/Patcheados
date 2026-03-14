@@ -49,6 +49,9 @@ download  :
     url: "https://www.mediafire.com/file/q4a8ayv3wfee8z5/Ace+Combat+(BR+v1.0)+(Matizhill).zip/file"
     sha256: "5dfb8f4eba8e51ccaf4b0c298eb211543f877a9e0ad621f7d766199013a94d69"
 resource:
+  - name: "Repositório"
+    provider: "GitHub"
+    url: "https://github.com/Matizhill/AceCombat1-PS1-PTBR"
   - name: "Site"
     provider: "Site"
     url: "https://www.matizhill.com.br/traducoes/ace-combat"

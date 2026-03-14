@@ -99,6 +99,8 @@ services:
     code: cib-nintendo
   "Facebook":
     code: facebook
+  "Fur Affinity":
+    code: furaffinity
   "GameBanana":
     code: gamebanana
   "Game Jolt":
@@ -121,6 +123,10 @@ services:
     code: itchdotio
   "Ko-fi":
     code: kofi
+  "Linktree":
+    code: linktree
+  "LivePix":
+    code: livepix
   "MediaFire":
     code: mediafire
   "MEGA":
@@ -143,6 +149,8 @@ services:
     code: link
   "Site":
     code: globe
+  "SoFurry":
+    code: link
   "Steam":
     code: steam
   "Telegram":

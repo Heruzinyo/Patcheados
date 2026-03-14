@@ -22,6 +22,7 @@ sns:
   - name: "Steam"
     url: "https://store.steampowered.com/app/623080/planetarian_HD/"
 tags:
+  - "kinetic_novel"
   - "visual_novel"
 ---
 

@@ -180,6 +180,12 @@ Conteúdo com foco em romance entre personagens femininas.
 
 ---
 
+### godot
+
+Jogos feitos com "Godot".
+
+---
+
 ### gratuito
 
 Jogos que podem ser jogados de forma gratuita, total ou majoritariamente (não incluí demos).
@@ -213,6 +219,12 @@ Jogos onde o foco é a resolução de mistérios através de coleta de pistas.
 ### jrpg
 
 RPGs no estilo japonês.
+
+---
+
+### kinetic_novel
+
+Subgênero de visual novel com foco em narrativas lineares e sem escolhas.
 
 ---
 
@@ -251,6 +263,12 @@ Jogos com mapas abertos para exploração livre.
 ### online
 
 Jogos que dependem de conexão com a internet.
+
+---
+
+### otome
+
+Jogos focados no público feminino onde a protagonista desenvolve relacionamentos com personagens masculinos.
 
 ---
 
@@ -900,6 +918,8 @@ Esses são os termos que você pode usar para os filtros.
   - **pseudônimos:** `korean`, `ko`
 * `Espanhol`
   - **pseudônimos:** `spanish`, `es`
+* `Finlandês`
+  - **pseudônimos:** `finnish`, `finlandes`, `fi`
 * `Francês`
   - **pseudônimos:** `french`, `frances`, `fr`
 * `Inglês`

@@ -18,6 +18,7 @@ sns:
   - name: "VNDB"
     url: "https://vndb.org/v226"
 tags:
+  - "otome"
   - "romance"
   - "visual_novel"
 ---

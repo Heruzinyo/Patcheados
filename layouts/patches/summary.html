@@ -238,12 +238,12 @@
         <ol class="description">
         {{- if reflect.IsSlice .tutorial -}}
           {{- range .tutorial }}
-          <li>{{ . }}</li>
+          <li>{{ . | markdownify }}</li>
           {{- end }}
         {{- else -}}
           {{- $preset := index $.Site.Data.install .tutorial -}}
           {{- range $preset }}
-          <li>{{ . }}</li>
+          <li>{{ . | markdownify }}</li>
           {{- end }}
         {{- end }}
         </ol>

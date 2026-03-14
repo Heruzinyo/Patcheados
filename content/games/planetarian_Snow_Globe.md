@@ -19,6 +19,7 @@ sns:
     url: "https://store.steampowered.com/app/2983350/planetarian_Snow_Globe/"
 tags:
   - "drama"
+  - "kinetic_novel"
   - "sci-fi"
   - "visual_novel"
 ---

@@ -6,6 +6,7 @@ members:
   - "Grand"
   - "Joo"
   - "Jv132"
+  - "Neko_Belmont"
   - "ZeraaMan14"
   - "Zungle"
 sns:
@@ -13,6 +14,8 @@ sns:
     url: "https://bsky.app/profile/matizhill.bsky.social"
   - name: "Discord"
     url: "https://discord.gg/Brax3b8FjE"
+  - name: "GitHub"
+    url: "https://github.com/Matizhill"
   - name: "Site"
     url: "https://www.matizhill.com.br/"
   - name: "Twitter"

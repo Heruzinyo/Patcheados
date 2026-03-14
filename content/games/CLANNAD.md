@@ -26,6 +26,7 @@ sns:
   - name: "Steam"
     url: "https://store.steampowered.com/app/324160/CLANNAD/"
 tags:
+  - "kinetic_novel"
   - "visual_novel"
 ---
 
