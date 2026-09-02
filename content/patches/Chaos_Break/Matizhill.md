@@ -13,8 +13,8 @@ credits:
   "Direção":
     - "Jv132"
   "Edição Gráfica":
-    - "David"
-    - "denpakei"
+    - "Menino_David"
+    - "denpakei32"
     - "Jv132"
   "Modding":
     - "Jv132"

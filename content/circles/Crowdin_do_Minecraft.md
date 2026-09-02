@@ -1,6 +1,6 @@
 ---
 title: "Crowdin do Minecraft"
-_build:
+build:
   render: false
   list: false
 ---

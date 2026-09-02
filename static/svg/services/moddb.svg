@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   role="img"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch4">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop4" />
+    </linearGradient>
+  </defs>
+  <title
+     id="title1">Tumblr</title>
+  <path
+     id="path2"
+     style="display:inline;opacity:1;fill-opacity:1;stroke:none;stroke-width:34.111;stroke-linejoin:round;paint-order:markers fill stroke"
+     d="M 9.9433007,0 A 6.03891,6.1223206 0 0 0 5.9610893,5.7565314 6.03891,6.1223206 0 0 0 9.1139521,11.135075 V 23.328516 C 9.1139521,23.700414 9.4135376,24 9.7854368,24 h 4.4291262 c 0.371899,0 0.671485,-0.299586 0.671485,-0.671484 V 11.135075 A 6.03891,6.1223206 0 0 0 18.038911,5.7565314 6.03891,6.1223206 0 0 0 14.056699,0 v 5.6720401 c 0,0.3718986 -0.299587,0.6714841 -0.671485,0.6714841 h -2.770428 c -0.371898,0 -0.6714853,-0.2995855 -0.6714853,-0.6714841 z" />
+  <metadata
+     id="metadata4">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Tumblr</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
