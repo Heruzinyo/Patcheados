@@ -1,0 +1,16 @@
+---
+interface Props {
+  paramPrefix: string;
+  label: string;
+}
+
+const { paramPrefix, label } = Astro.props as Props;
+---
+
+<fieldset>
+  <legend class="muted">{label}</legend>
+  <div class="grid grid-2col static gap-md">
+    <input type="text" class="bordered bg-frame padding-xs" placeholder="De" aria-label="De" name={`${paramPrefix}-from`} />
+    <input type="text" class="bordered bg-frame padding-xs" placeholder="Até" aria-label="Até" name={`${paramPrefix}-to`} />
+  </div>
+</fieldset>

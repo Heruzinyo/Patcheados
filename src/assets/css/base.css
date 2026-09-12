@@ -1,0 +1,114 @@
+/* Reset */
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+/* Document */
+body {
+  color: var(--text);
+  background-color: var(--bg-page);
+  font-family: var(--font);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+nav button {
+  cursor: pointer;
+  border-style: none;
+  background-color: unset;
+  color: var(--accent);
+  padding: unset;
+  font: inherit;
+}
+
+a:hover,
+nav button:hover {
+  text-decoration: underline;
+}
+
+nav a[aria-current="page"],
+nav button[aria-pressed="true"] {
+  color: var(--text);
+  font-weight: bold;
+  text-decoration: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Forms */
+select {
+  color: var(--text);
+}
+
+input {
+  color: var(--text);
+  min-width: 0;
+}
+
+button {
+  color: var(--text);
+  padding: unset;
+}
+
+legend {
+  padding: 0;
+  display: table;
+}
+
+fieldset {
+  border: 0;
+  padding: 0.01em 0 0 0;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+table td,
+table th {
+  padding: 0.5rem;
+}
+
+table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Markdown */
+hr {
+  margin: 1rem 0;
+}
+
+blockquote {
+  border-left: 4px solid var(--border);
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+code {
+  background: var(--bg-frame);
+  padding: 0.15rem 0.4rem;
+  font-size: 0.9rem;
+}
+
+p img {
+  max-width: 75%;
+  max-height: 45vh;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

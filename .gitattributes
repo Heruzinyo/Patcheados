@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+LICENSE* text eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff2 binary
+*.ans binary
+*.psd binary
+*.sqlite binary
+*.lock binary

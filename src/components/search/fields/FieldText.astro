@@ -1,0 +1,25 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  id: string;
+  suggest?: boolean;
+  type: string;
+}
+
+const { name, label, id, suggest, type } = Astro.props as Props;
+---
+
+<div class="flex flex-column suggest-wrapper">
+  <label for={id} class="muted">{label}</label>
+  <input
+    type="text"
+    class="bordered bg-frame padding-xs"
+    name={name}
+    id={id}
+    autocomplete="off"
+    data-suggest-for={suggest ? name : undefined}
+    data-suggest-type={suggest ? type : undefined}
+  />
+  {suggest && <div class="suggest-box bordered bg-frame" data-suggest-for={name} />}
+</div>

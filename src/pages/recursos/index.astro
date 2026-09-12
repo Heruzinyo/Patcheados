@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import ListingForm from "../../components/search/ListingForm.astro";
+import { resourcesConfig } from "../../lib/search/configs";
+import { getVocab, vocabLabel } from "../../lib/search/vocab";
+
+const vocab = await getVocab();
+const categoriesVocab = vocab.get("categories") ?? {};
+const categoryLabelMap = Object.fromEntries(
+  Object.keys(categoriesVocab).map((slug) => [slug, vocabLabel(categoriesVocab, slug)])
+);
+---
+
+<Base title="Recursos">
+  <section class="flex flex-column gap-lg" data-resources-search>
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h1>Recursos</h1>
+      </div>
+      <div class="bg-body padding-md flex flex-column gap-md" data-resources-results>
+      </div>
+      <nav class="flex flex-wrap justify-center bg-frame border-top padding-sm gap-lg" aria-label="Paginação" data-resources-pagination>
+      </nav>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Buscar Recursos</h2>
+      </div>
+      <ListingForm config={resourcesConfig} />
+    </div>
+  </aside>
+</Base>
+
+<script type="module" define:vars={{ __resourcesConfig: resourcesConfig, __resourcesVocab: { category: categoryLabelMap } }}>
+  window.__resourcesSearchData = { config: __resourcesConfig, vocab: __resourcesVocab };
+</script>
+<script type="module">
+  import { initListing } from "../../lib/search/engine.ts";
+  const { config, vocab } = window.__resourcesSearchData;
+  initListing(config, vocab);
+</script>
+<script type="module">
+  import "../../lib/search/suggest.ts";
+</script>

@@ -1,0 +1,38 @@
+---
+---
+
+<div>
+  <label for="theme">Tema:</label>
+  <select class="bordered bg-body padding-xs pointer action" name="theme" id="theme">
+    <option value="adastra">Adastra</option>
+    <option value="fate-stay-night">Fate/stay night</option>
+  </select>
+</div>
+<div class="divider-v">
+  <small><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt-br" target="_blank" rel="noopener">CC-BY-NC-SA 4.0</a></small>
+  <small><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GPLv3</a></small>
+</div>
+
+<script is:inline>
+  (function () {
+    // This script is identical on every page so Astro skips re-running it after
+    // the first load, but the #theme <select> is replaced on every swap. Attaching
+    // listeners directly to the node meant they stayed on the old, detached element.
+    // Fix: delegate on document (never replaced) and look up #theme fresh each time.
+    function syncSelect() {
+      const select = document.getElementById("theme");
+      if (!select) return;
+      const stored = window.localStorage.getItem("theme");
+      if (stored) select.value = stored;
+    }
+
+    syncSelect();
+    document.addEventListener("astro:after-swap", syncSelect);
+
+    document.addEventListener("change", (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLSelectElement) || target.id !== "theme") return;
+      window.setTheme(target.value);
+    });
+  })();
+</script>

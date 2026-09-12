@@ -1,0 +1,59 @@
+---
+interface Props {
+  screenshots: ImageMetadata[];
+}
+
+const { screenshots } = Astro.props as Props;
+---
+
+{
+  screenshots.length > 0 && (
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Galeria</h2>
+      </div>
+      <div id="images-container" class="bg-body padding-md grid grid-3col gap-md">
+        {screenshots.map((s) => (
+          <button type="button" data-lightbox-trigger data-src={s.src} class="wrapper gallery bordered bg-frame pointer action">
+            <img src={s.src} alt="Screenshot" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<div id="lightbox"></div>
+
+<script>
+  function getLightbox() {
+    return document.getElementById("lightbox");
+  }
+
+  // Listeners are delegated on document (persists across navigations) rather
+  // than cached on #lightbox itself, since that element is recreated on every
+  // page swap and this script tag (identical on every page) isn't re-run.
+  document.addEventListener("click", (e) => {
+    const lightbox = getLightbox();
+    if (!lightbox) return;
+
+    const trigger = (e.target as HTMLElement)?.closest<HTMLButtonElement>("[data-lightbox-trigger]");
+    if (trigger) {
+      lightbox.innerHTML = `<img src="${trigger.dataset.src}" alt="Screenshot ampliada" />`;
+      lightbox.classList.add("show");
+      return;
+    }
+    if (e.target === lightbox) {
+      lightbox.classList.remove("show");
+      lightbox.innerHTML = "";
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const lightbox = getLightbox();
+    if (!lightbox) return;
+    lightbox.classList.remove("show");
+    lightbox.innerHTML = "";
+  });
+</script>

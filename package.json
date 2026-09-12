@@ -1,0 +1,29 @@
+{
+  "name": "patcheados",
+  "type": "module",
+  "version": "2.0.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.9",
+    "markdown-it": "^15.0.1",
+    "sql.js": "^1.14.2"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^13.0.3"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "better-sqlite3@13.0.3": true,
+    "esbuild@0.28.2": true
+  }
+}

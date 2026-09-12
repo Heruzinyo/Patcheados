@@ -1,0 +1,46 @@
+/* Media Wrapper */
+.wrapper {
+  overflow: hidden;
+}
+
+.wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wrapper.icon {
+  width: 40px;
+  aspect-ratio: 1 / 1;
+}
+
+.wrapper.banner {
+  width: 100%;
+  aspect-ratio: 460 / 215;
+}
+
+.wrapper.logo {
+  width: 120px;
+  height: 80px;
+}
+
+.wrapper.logo img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  margin: auto;
+}
+
+.wrapper.pfp {
+  aspect-ratio: 1 / 1;
+}
+
+.wrapper.gallery {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.wrapper.gallery img {
+  object-fit: contain;
+}

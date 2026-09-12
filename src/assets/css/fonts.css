@@ -1,0 +1,26 @@
+/* Noto Sans JP */
+@font-face {
+  font-display: swap;
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/noto-sans-jp-v56-latin-regular.woff2') format('woff2');
+}
+
+/* Roboto Slab */
+@font-face {
+  font-display: swap;
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/roboto-slab-v36-latin-regular.woff2') format('woff2');
+}
+
+/* Tiny5 */
+@font-face {
+  font-display: swap;
+  font-family: 'Tiny5';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/tiny5-v3-latin-regular.woff2') format('woff2');
+}

@@ -1,0 +1,50 @@
+---
+import type { PatchEntry } from "../../lib/db";
+import { resolvePatchCredits } from "../../lib/credits";
+import EntryRow from "../cards/EntryRow.astro";
+
+interface Props {
+  patch: PatchEntry;
+}
+
+const { patch } = Astro.props as Props;
+const { circles, authors } = await resolvePatchCredits(patch);
+---
+
+{
+  (circles.length > 0 || authors.length > 0) && (
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Créditos</h2>
+      </div>
+      {circles.length > 0 && (
+        <div class="bg-body padding-md grid grid-2col gap-md">
+          {circles.map((c) => (
+            <EntryRow
+              href={c.href ?? "#"}
+              mediaKind="logo"
+              mediaSrc={c.image}
+              mediaAlt={c.title}
+              title={c.title}
+              metaLine={c.roles.join(", ")}
+            />
+          ))}
+        </div>
+      )}
+      {authors.length > 0 && (
+        <div class="bg-body padding-md grid grid-3col gap-md">
+          {authors.map((a) => (
+            <EntryRow
+              href={a.href ?? "#"}
+              mediaKind="icon"
+              mediaSrc={a.image}
+              mediaAlt={a.title}
+              title={a.title}
+              metaLine={a.roles.join(", ")}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

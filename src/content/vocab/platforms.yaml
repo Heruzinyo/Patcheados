@@ -1,0 +1,163 @@
+pc:
+  label: "PC"
+  short: "PC"
+
+android:
+  label: "Android"
+  short: "Android"
+
+ios:
+  label: "iOS"
+  short: "iOS"
+
+web:
+  label: "Web"
+  short: "Web"
+
+pc-engine:
+  label: "PC Engine"
+  short: "PCE"
+
+arcade:
+  label: "Arcade"
+  short: "Arcade"
+
+nes:
+  label: "Nintendo Entertainment System"
+  short: "NES"
+
+snes:
+  label: "Super Nintendo Entertainment System"
+  short: "SNES"
+
+n64:
+  label: "Nintendo 64"
+  short: "N64"
+
+gamecube:
+  label: "Nintendo GameCube"
+  short: "GameCube"
+
+wii:
+  label: "Nintendo Wii"
+  short: "Wii"
+
+wii-u:
+  label: "Nintendo Wii U"
+  short: "Wii U"
+
+switch:
+  label: "Nintendo Switch"
+  short: "Switch"
+
+switch2:
+  label: "Nintendo Switch 2"
+  short: "Switch 2"
+
+gb:
+  label: "Game Boy"
+  short: "GB"
+
+gbc:
+  label: "Game Boy Color"
+  short: "GBC"
+
+gba:
+  label: "Game Boy Advance"
+  short: "GBA"
+
+ds:
+  label: "Nintendo DS"
+  short: "DS"
+
+2ds:
+  label: "Nintendo 2DS"
+  short: "2DS"
+
+3ds:
+  label: "Nintendo 3DS"
+  short: "3DS"
+
+ps1:
+  label: "Sony PlayStation"
+  short: "PS1"
+
+ps2:
+  label: "Sony PlayStation 2"
+  short: "PS2"
+
+ps3:
+  label: "Sony PlayStation 3"
+  short: "PS3"
+
+ps4:
+  label: "Sony PlayStation 4"
+  short: "PS4"
+
+ps5:
+  label: "Sony PlayStation 5"
+  short: "PS5"
+
+psp:
+  label: "Sony PlayStation Portable"
+  short: "PSP"
+
+psv:
+  label: "Sony PlayStation Vita"
+  short: "Vita"
+
+xbox:
+  label: "Xbox"
+  short: "Xbox"
+
+x360:
+  label: "Xbox 360"
+  short: "X360"
+
+xone:
+  label: "Xbox One"
+  short: "Xbox One"
+
+xss:
+  label: "Xbox Series S"
+  short: "Series S"
+
+xsx:
+  label: "Xbox Series X"
+  short: "Series X"
+
+sms:
+  label: "SEGA Master System"
+  short: "SMS"
+
+genesis:
+  label: "SEGA Genesis"
+  short: "Genesis"
+
+game-gear:
+  label: "SEGA Game Gear"
+  short: "Game Gear"
+
+saturn:
+  label: "SEGA Saturn"
+  short: "Saturn"
+
+dreamcast:
+  label: "SEGA Dreamcast"
+  short: "Dreamcast"
+
+quest:
+  label: "Meta Quest"
+  short: "Quest"
+
+quest2:
+  label: "Meta Quest 2"
+  short: "Quest 2"
+
+quest3:
+  label: "Meta Quest 3"
+  short: "Quest 3"
+
+wonderswan:
+  label: "WonderSwan"
+  short: "WS"

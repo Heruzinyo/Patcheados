@@ -1,0 +1,178 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import EntryRow from "../../components/cards/EntryRow.astro";
+import PatchRow from "../../components/cards/PatchRow.astro";
+import { getDb } from "../../lib/db";
+import { authorUrl, circleUrl } from "../../lib/url";
+import { getCirclesForAuthor, getCreditRolesLabel, getCreditedPatches } from "../../lib/credits";
+import { slugifyAll } from "../../lib/slug";
+import { toLabel, displayTitle } from "../../lib/game";
+import { getVocab } from "../../lib/search/vocab";
+import { resolveAvatarSrc, resolveLogoSrc } from "../../lib/media";
+
+export async function getStaticPaths() {
+  const authors = await getCollection("authors");
+  return authors.map((author) => ({ params: { author: author.id }, props: { author } }));
+}
+
+const { author } = Astro.props;
+const { Content } = await render(author);
+
+const db = await getDb();
+const vocab = await getVocab();
+const activitiesVocab = vocab.get("activities");
+const rolesVocab = vocab.get("roles");
+
+const memberCircles = await getCirclesForAuthor(author.id);
+const memberCirclesWithRoles = memberCircles.map((circle) => {
+  const membership = circle.data.members.find((m) => m.author === author.id);
+  const roleLine = membership?.roles.length ? membership.roles.map((r) => toLabel(rolesVocab, r)).sort((a, b) => a.localeCompare(b, "pt-BR")).join(", ") : undefined;
+  return { circle, roleLine };
+});
+
+// Authors rarely own a patch directly, so "Patches Trabalhados" is fetched via credits, not ownership.
+const creditedPatches = await getCreditedPatches(author.id, false);
+  const ownedWithRoles = await Promise.all(
+    creditedPatches.map(async (patch) => {
+      const game = db.gameById.get(patch.id.split("/")[0]);
+      if (!game) return null;
+      return { patch, game, roleLine: await getCreditRolesLabel(patch, author.id, false) };
+    })
+  ).then((arr) => arr.filter((x): x is NonNullable<typeof x> => x !== null));
+
+ownedWithRoles.sort((a, b) => displayTitle(a.game, a.patch).localeCompare(displayTitle(b.game, b.patch), "pt-BR"));
+
+// Aggregate "Papel"/"Personagem" filter values from this author's credit entries.
+const roleSlugs = new Set<string>();
+const characters = new Set<string>();
+for (const patch of creditedPatches) {
+  for (const credit of patch.data.credits) {
+    if ("circle" in credit || credit.author !== author.id) continue;
+    for (const r of credit.roles) {
+      roleSlugs.add(r.role);
+      if (r.character) characters.add(r.character);
+    }
+  }
+}
+
+const avatarSrc = resolveAvatarSrc(author);
+---
+
+<Base
+  title={author.data.title}
+  description={author.body
+    ? author.body.replace(/\s+/g, " ").trim().slice(0, 155)
+    : `Perfil de ${author.data.title} no Patcheados.`}
+>
+  <section class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame padding-sm">
+        <h1>{author.data.title}</h1>
+      </div>
+      {author.body && (
+      <div class="flex flex-column bg-body border-top padding-md gap-sm">
+        <Content />
+      </div>
+      )}
+    </div>
+
+    {
+      memberCircles.length > 0 && (
+        <div class="bordered">
+          <div class="bg-frame border-bottom padding-sm">
+            <h2>Círculos</h2>
+          </div>
+          <div class="bg-body padding-md grid grid-2col gap-md">
+            {memberCirclesWithRoles.map(({ circle, roleLine }) => (
+              <EntryRow
+                href={circleUrl(circle)}
+                mediaKind="logo"
+                mediaSrc={resolveLogoSrc(circle)}
+                mediaAlt={circle.data.title}
+                title={circle.data.title}
+                roleLine={roleLine}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      ownedWithRoles.length > 0 && (
+        <div class="bordered">
+          <div class="bg-frame border-bottom padding-sm">
+            <h2>Patches Trabalhados</h2>
+          </div>
+          <div class="bg-body padding-md flex flex-column gap-md">
+            {ownedWithRoles.map(({ patch, game, roleLine }) => (
+              <PatchRow game={game} patch={patch} roleLine={roleLine} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="wrapper pfp bg-frame">
+        <img src={avatarSrc} alt={`Foto de Perfil de ${author.data.title}`} loading="lazy" />
+      </div>
+    </div>
+
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Estatísticas</h2>
+      </div>
+      <div class="bg-body">
+        <table>
+          {
+            author.data.activity && (
+              <tr>
+                <td class="muted">Status</td>
+                <td>{toLabel(activitiesVocab, author.data.activity)}</td>
+              </tr>
+            )
+          }
+          {
+            memberCircles.length > 0 && (
+              <tr>
+                <td class="muted">Círculos</td>
+                <td>{memberCircles.length}</td>
+              </tr>
+            )
+          }
+          {
+            creditedPatches.length > 0 && (
+              <tr>
+                <td class="muted">Patches Creditados</td>
+                <td>{creditedPatches.length}</td>
+              </tr>
+            )
+          }
+        </table>
+      </div>
+    </div>
+
+    {
+      author.data.links.length > 0 && (
+        <div class="bordered">
+          <div class="bg-frame border-bottom padding-sm">
+            <h2>Links Externos</h2>
+          </div>
+          <div class="bg-body padding-md">
+            <ul class="list divider-h">
+              {author.data.links.map((link) => (
+                <li>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label ?? link.url}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+  </aside>
+</Base>

@@ -1,0 +1,47 @@
+---
+import type { PatchEntry } from "../../lib/db";
+import DownloadEntry from "./DownloadEntry.astro";
+
+interface Props {
+  patch: PatchEntry;
+}
+
+const { patch } = Astro.props as Props;
+---
+
+{
+  patch.data.downloads.length > 0 && (
+    <div class="bordered" data-downloads-section>
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Download</h2>
+      </div>
+      <div class="bg-body padding-md flex flex-column gap-md">
+        {patch.data.downloads.map((d) => {
+          const title = d.variant ? `Versão ${d.version} (${d.variant})` : `Versão ${d.version}`;
+          return <DownloadEntry download={d} title={title} />;
+        })}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  // Hash-copy button, delegated so it works for any number of downloads
+  // without per-button listener setup.
+  document.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement)?.closest<HTMLElement>("[data-copy]");
+    if (!btn) return;
+    const value = btn.dataset.copy;
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      const original = btn.textContent;
+      btn.textContent = "Copiado!";
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 1200);
+    } catch {
+      // clipboard API unavailable - fail silently
+    }
+  });
+</script>

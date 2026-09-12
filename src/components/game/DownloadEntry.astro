@@ -1,0 +1,79 @@
+---
+import { toLabel, statusClass, typeLabel, formatDatePtBr } from "../../lib/game";
+import { getVocab, vocabInstructions } from "../../lib/search/vocab";
+import type { CollectionEntry } from "astro:content";
+import { renderMarkdownInline } from "../../lib/markdown";
+
+type Download = CollectionEntry<"patches">["data"]["downloads"][number];
+
+interface Props {
+  download: Download;
+  title: string; // "Versão {version} (variant)"
+}
+
+const { download: d, title } = Astro.props as Props;
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms");
+const regionsVocab = vocab.get("regions");
+const statusesVocab = vocab.get("statuses");
+const typesVocab = vocab.get("types");
+const installsVocab = vocab.get("installs");
+const installSteps = d.install ? vocabInstructions(installsVocab, d.install) : [];
+---
+
+<div class="grid bordered bg-frame" data-platform={d.platform}>
+  <div class="card-row gap-sm no-media stack-mobile grid padding-sm divider-h">
+    <div class="min-w-0">
+      <div class="card-title-row flex align-center flex-wrap gap-xs">
+        <div class="flex flex-wrap gap-sm">
+          <span class="bordered bg-body padding-xs smaller bold">{toLabel(platformsVocab, d.platform)}</span>
+          <span class="bordered bg-body padding-xs smaller bold">{toLabel(regionsVocab, d.region)}</span>
+          <span class="bordered bg-body padding-xs smaller bold">{d.gameversion}</span>
+          {d.type && (
+            <span class="bordered border-dashed bg-body padding-xs smaller bold">{typeLabel(typesVocab, d.type)}</span>
+          )}
+        </div>
+        <div class="flex gap-xs min-w-0">
+          <span>{title}</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap align-baseline divider-v">
+        <span class="small muted">Publicado em: {formatDatePtBr(d.date)}</span>
+        <span class="small muted">{d.provider}</span>
+        {d.format && <span class="small muted">{d.format}</span>}
+        {d.filesize && <span class="small muted">{d.filesize}</span>}
+        {d.sha256 && (
+          <button
+            class="bordered bg-body padding-rect-xs pointer action smaller"
+            title={`SHA256: ${d.sha256}`}
+            data-copy={d.sha256}
+          >
+            Hash
+          </button>
+        )}
+      </div>
+    </div>
+    <div class="flex align-center justify-between gap-md">
+      <div class={`bordered highlight ${statusClass(d.status)} bg-body divider-v flex align-center padding-rect-xs`}>
+        <span class="small">{d.completion}%</span>
+        <span class="small">{toLabel(statusesVocab, d.status)}</span>
+      </div>
+      <a href={d.url} target="_blank" rel="noopener noreferrer" class="bordered bg-body padding-rect-xs pointer action target bold">
+        Download
+      </a>
+    </div>
+  </div>
+
+  {
+    (d.install || d.install_custom) && (
+      <details class="border-top">
+        <summary class="padding-sm pointer action">Instalação</summary>
+        <div class="bg-body border-top padding-sm">
+            {d.install_custom
+              ? d.install_custom.map((line) => <p set:html={renderMarkdownInline(line)} />)
+              : installSteps.map((line) => <p set:html={renderMarkdownInline(line)} />)}
+        </div>
+      </details>
+    )
+  }
+</div>

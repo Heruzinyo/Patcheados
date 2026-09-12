@@ -1,0 +1,45 @@
+---
+import type { GameEntry, PatchEntry } from "../../lib/db";
+import { patchUrl } from "../../lib/url";
+import { displayTitle, statusClass, formatYear, toLabel } from "../../lib/game";
+import { resolveCreatorNamesLabel } from "../../lib/credits";
+import { getVocab, vocabShort } from "../../lib/search/vocab";
+import EntryRow, { type Badge } from "./EntryRow.astro";
+
+interface Props {
+  game: GameEntry;
+  patch: PatchEntry;
+  /** Role labels for whichever author/circle this row is being rendered under (credits sections) */
+  roleLine?: string;
+  /** Hide the creator names line, useful on a circle/author's own page where every row is already theirs */
+  showCreator?: boolean;
+}
+
+const { game, patch, roleLine, showCreator = true } = Astro.props as Props;
+
+const title = displayTitle(game, patch);
+const creatorLabel = showCreator ? await resolveCreatorNamesLabel(patch) : undefined;
+const year = formatYear(game.data.date);
+const href = patchUrl(game, patch);
+const iconSrc = game.data.icon?.src;
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms");
+const statusesVocab = vocab.get("statuses");
+
+const badges: Badge[] = [
+  ...patch.data.platforms.map((p) => ({ label: vocabShort(platformsVocab, p) })),
+  { label: toLabel(statusesVocab, patch.data.status), status: statusClass(patch.data.status) },
+];
+---
+
+<EntryRow
+  href={href}
+  mediaKind="icon"
+  mediaSrc={iconSrc}
+  mediaAlt={title}
+  title={title}
+  year={year}
+  metaLine={creatorLabel}
+  roleLine={roleLine}
+  badges={badges}
+/>

@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { toLabel, formatDatePtBr } from "../../lib/game";
+import { getVocab } from "../../lib/search/vocab";
+
+export async function getStaticPaths() {
+  const resources = await getCollection("resources");
+  return resources.map((resource) => ({ params: { resource: resource.id }, props: { resource } }));
+}
+
+const { resource } = Astro.props;
+const { Content } = await render(resource);
+const vocab = await getVocab();
+const categoriesVocab = vocab.get("categories");
+---
+
+<Base
+  title={resource.data.title}
+  description={resource.body.replace(/\s+/g, " ").trim().slice(0, 155)}
+>
+  <section class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h1>{resource.data.title}</h1>
+      </div>
+      <div class="flex flex-column bg-body padding-md gap-sm markdown">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Estatísticas</h2>
+      </div>
+      <div class="bg-body">
+        <table>
+          <tr>
+            <td class="muted">Autor</td>
+            <td>{resource.data.writers.join(", ")}</td>
+          </tr>
+          <tr>
+            <td class="muted">Categoria</td>
+            <td>{resource.data.categories.map((c) => toLabel(categoriesVocab, c)).join(", ")}</td>
+          </tr>
+          <tr>
+            <td class="muted">Publicado em</td>
+            <td>{formatDatePtBr(resource.data.date)}</td>
+          </tr>
+          <tr>
+            <td class="muted">Atualizado em</td>
+            <td>{formatDatePtBr(resource.data.lastmod)}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </aside>
+</Base>

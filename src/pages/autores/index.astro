@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import ListingForm from "../../components/search/ListingForm.astro";
+import { authorsConfig } from "../../lib/search/configs";
+import { getVocab, vocabLabel } from "../../lib/search/vocab";
+
+const vocab = await getVocab();
+const activitiesVocab = vocab.get("activities") ?? {};
+const activityLabelMap = Object.fromEntries(
+  Object.keys(activitiesVocab).map((slug) => [slug, vocabLabel(activitiesVocab, slug)])
+);
+---
+
+<Base title="Autores">
+  <section class="flex flex-column gap-lg" data-authors-search>
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h1>Autores</h1>
+      </div>
+      <div class="bg-body padding-md grid grid-3col gap-md" data-authors-results>
+        
+      </div>
+      <nav class="flex flex-wrap justify-center bg-frame border-top padding-sm gap-lg" aria-label="Paginação" data-authors-pagination>
+      </nav>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Buscar Autores</h2>
+      </div>
+      <ListingForm config={authorsConfig} />
+    </div>
+  </aside>
+</Base>
+
+<script type="module" define:vars={{ __authorsConfig: authorsConfig, __authorsVocab: { activity: activityLabelMap } }}>
+  window.__authorsSearchData = { config: __authorsConfig, vocab: __authorsVocab };
+</script>
+<script type="module">
+  import { initListing } from "../../lib/search/engine.ts";
+  const { config, vocab } = window.__authorsSearchData;
+  initListing(config, vocab);
+</script>
+<script type="module">
+  import "../../lib/search/suggest.ts";
+</script>

@@ -1,0 +1,160 @@
+---
+import type { GameEntry, PatchEntry } from "../../lib/db";
+import type { PatchSelectorData } from "../../lib/game";
+import { toLabel } from "../../lib/game";
+import { patchUrl, gameUrl } from "../../lib/url";
+import { getVocab } from "../../lib/search/vocab";
+
+interface Props {
+  game: GameEntry;
+  selector: PatchSelectorData;
+  currentPatch?: PatchEntry;
+}
+
+const { game, selector, currentPatch } = Astro.props as Props;
+const currentPatchUrl = currentPatch ? patchUrl(game, currentPatch) : "";
+const currentPatchPlatforms = currentPatch ? currentPatch.data.platforms.join(",") : "";
+const gameBaseUrl = gameUrl(game);
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms");
+---
+
+<div
+  class="bordered"
+  data-patch-selector
+  data-current-patch-url={currentPatchUrl}
+  data-current-platforms={currentPatchPlatforms}
+  data-game-url={gameBaseUrl}
+>
+  <div class="bg-frame border-bottom padding-sm">
+    <h2>Patches</h2>
+  </div>
+  <div class="bg-body padding-md grid grid-2col gap-md">
+    <div class="flex flex-column min-w-0">
+      <label for="platform" class="small muted">Plataforma</label>
+      <select class="bordered bg-frame padding-xs text-overflow pointer action" name="platform" id="platform">
+        <option value="" disabled hidden selected={!currentPatch}>Selecionar Plataforma</option>
+        <option value="all" selected={Boolean(currentPatch)}>Todas as plataformas</option>
+        {selector.platforms.map((p) => <option value={p}>{toLabel(platformsVocab, p)}</option>)}
+      </select>
+    </div>
+    <div class="flex flex-column min-w-0">
+      <label for="patch" class="small muted">Patch</label>
+      <select
+        class="bordered bg-frame padding-xs text-overflow pointer action"
+        name="patch"
+        id="patch"
+        disabled={!currentPatch}
+      >
+        <option value="" disabled hidden selected={!currentPatch}>Selecionar Patch</option>
+        {
+          selector.items.map((item) => (
+            <option value={item.url} data-platforms={item.platforms} selected={currentPatch ? item.url === currentPatchUrl : false}>
+              {item.label}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { navigate } from "astro:transitions/client";
+
+  // astro:page-load always fires on soft navigation, unlike this <script>
+  // tag, which Astro may skip re-running if it's byte-identical to the
+  // previous page's copy, relying on re-execution broke patch switching
+  // after the first navigation.
+  function initPatchSelectors() {
+    document.querySelectorAll<HTMLElement>("[data-patch-selector]").forEach((root) => {
+      const platformSelect = root.querySelector<HTMLSelectElement>("#platform");
+      const patchSelect = root.querySelector<HTMLSelectElement>("#patch");
+      if (!platformSelect || !patchSelect) return;
+
+      const currentPlatforms = (root.dataset.currentPlatforms ?? "").split(",").filter(Boolean);
+      const gameUrl = root.dataset.gameUrl ?? "";
+
+      // Carries the chosen platform onto the target URL as ?platform=, dropping it when "all"/none is chosen.
+      function withPlatform(base: string): string {
+        const url = new URL(base, window.location.origin);
+        const chosen = platformSelect!.value;
+        if (chosen && chosen !== "all") url.searchParams.set("platform", chosen);
+        else url.searchParams.delete("platform");
+        return url.pathname + url.search;
+      }
+
+      function goTo(base: string) {
+        sessionStorage.setItem("patch-selector:scroll", String(window.scrollY));
+        navigate(withPlatform(base));
+      }
+
+      function applyPlatformFilter() {
+        const chosen = platformSelect!.value;
+        const isFiltering = chosen !== "all" && chosen !== "";
+
+        let anyVisible = false;
+        for (const opt of Array.from(patchSelect!.options)) {
+          if (!opt.value) continue; // keep the placeholder option always
+          const platforms = (opt.dataset.platforms ?? "").split(",");
+          const visible = !isFiltering || platforms.includes(chosen);
+          opt.hidden = !visible;
+          if (visible) anyVisible = true;
+        }
+        patchSelect!.disabled = !anyVisible;
+
+        // Setting `hidden` alone isn't enough: DownloadEntry's root has a
+        // `.grid` class that beats the UA's `[hidden] { display: none }`,
+        // so drive `display` directly too.
+        let anyDownloadVisible = false;
+        document.querySelectorAll<HTMLElement>("[data-platform]").forEach((el) => {
+          const shouldHide = isFiltering && el.dataset.platform !== chosen;
+          el.hidden = shouldHide;
+          el.style.display = shouldHide ? "none" : "";
+          if (!shouldHide) anyDownloadVisible = true;
+        });
+
+        // Drop the whole Download section (not just an empty shell) if every card got filtered out.
+        const downloadsSection = document.querySelector<HTMLElement>("[data-downloads-section]");
+        if (downloadsSection) {
+          const shouldHideSection = !anyDownloadVisible;
+          downloadsSection.hidden = shouldHideSection;
+          downloadsSection.style.display = shouldHideSection ? "none" : "";
+        }
+
+        // Keep ?platform= in the address bar in sync without a real navigation.
+        const url = new URL(window.location.href);
+        if (isFiltering) url.searchParams.set("platform", chosen);
+        else url.searchParams.delete("platform");
+        history.replaceState(history.state, "", url.pathname + url.search);
+
+        // If the loaded patch doesn't support the chosen platform at all, unload back to the game page.
+        if (isFiltering && currentPlatforms.length && !currentPlatforms.includes(chosen) && gameUrl) {
+          goTo(gameUrl);
+        }
+      }
+
+      platformSelect.addEventListener("change", applyPlatformFilter);
+      patchSelect.addEventListener("change", () => {
+        if (patchSelect!.value) goTo(patchSelect!.value);
+      });
+
+      // Restore the platform filter from the URL, if this page still offers that option.
+      const urlPlatform = new URLSearchParams(window.location.search).get("platform");
+      if (urlPlatform && Array.from(platformSelect.options).some((o) => o.value === urlPlatform)) {
+        platformSelect.value = urlPlatform;
+      }
+
+      applyPlatformFilter();
+    });
+
+    // Restore the scroll position saved before the last soft navigation, so switching patches doesn't jump the page.
+    const savedScroll = sessionStorage.getItem("patch-selector:scroll");
+    if (savedScroll !== null) {
+      window.scrollTo(0, Number(savedScroll));
+      sessionStorage.removeItem("patch-selector:scroll");
+    }
+  }
+
+  document.addEventListener("astro:page-load", initPatchSelectors);
+</script>

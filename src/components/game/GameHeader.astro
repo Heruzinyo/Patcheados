@@ -1,0 +1,20 @@
+---
+import type { GameEntry } from "../../lib/db";
+import { render } from "astro:content";
+
+interface Props {
+  game: GameEntry;
+}
+
+const { game } = Astro.props as Props;
+const { Content } = await render(game);
+---
+
+<div class="bordered">
+  <div class="bg-frame border-bottom padding-sm">
+    <h1>{game.data.title}</h1>
+  </div>
+  <div class="flex flex-column bg-body padding-md gap-sm">
+    <Content />
+  </div>
+</div>

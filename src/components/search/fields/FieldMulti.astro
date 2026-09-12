@@ -1,0 +1,26 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  id: string;
+  options: { value: string; label: string }[];
+}
+
+const { name, label, id, options } = Astro.props as Props;
+---
+
+<fieldset>
+  <legend class="muted">{label}</legend>
+  <div class="bordered bg-frame padding-xs scrollable">
+    {
+      options.map((opt) => (
+        <div>
+          <input type="checkbox" id={`${id}-${opt.value}`} name={name} value={opt.value} />
+          <label for={`${id}-${opt.value}`} class="pointer">
+            {opt.label}
+          </label>
+        </div>
+      ))
+    }
+  </div>
+</fieldset>

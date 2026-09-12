@@ -1,0 +1,29 @@
+[data-theme="adastra"] {
+  /* Background */
+  --bg-page: #171629;
+  --bg-frame: #4a1f27;
+  --bg-body: #673940;
+
+  /* Text */
+  --text: #ffffff;
+
+  /* Muted */
+  --muted: #FFFFFF80;
+
+  /* Accent */
+  --accent: #c9af8f;
+
+  /* Border */
+  --border: #c9af8f;
+
+  /* Highlight */
+  --danger: #f04549;
+  --warning: #ffd458;
+  --success: #58ef8c;
+
+  /* Font */
+  --font: Roboto Slab, serif;
+
+  /* Giscus */
+  --giscus: gruvbox_dark;
+}

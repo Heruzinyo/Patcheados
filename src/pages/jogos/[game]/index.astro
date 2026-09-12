@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import GameHeader from "../../../components/game/GameHeader.astro";
+import PatchSelector from "../../../components/game/PatchSelector.astro";
+import GameSidebar from "../../../components/game/GameSidebar.astro";
+import { getDb } from "../../../lib/db";
+import { getPatchSelectorData } from "../../../lib/game";
+import { slugifyAll } from "../../../lib/slug";
+
+export async function getStaticPaths() {
+  const games = await getCollection("games");
+  return games.map((game) => ({ params: { game: game.id }, props: { game } }));
+}
+
+const { game } = Astro.props;
+const db = await getDb();
+const selector = await getPatchSelectorData(db, game);
+
+const pageDescription = game.body
+  ? game.body.replace(/\s+/g, " ").trim().slice(0, 155)
+  : `${game.data.title} no Patcheados.`;
+
+// Aggregate filter values across all patches per game, patch-level filters narrow which games show up, not which patch.
+const patches = db.patchesByGameId.get(game.id) ?? [];
+
+const patchPlatforms = new Set<string>();
+const patchRegions = new Set<string>();
+const patchPublishers = new Set<string>();
+const statuses = new Set<string>();
+const origins = new Set<string>();
+const creators = new Set<string>();
+const coverage = { subs: new Set<string>(), graphics: new Set<string>(), dub: new Set<string>() };
+const patchDates: Date[] = [];
+const downloadDates: Date[] = [];
+const boolFlags = { lost_source: false, lost_media: false, official: false, mtl: false, external: false, archive: false };
+
+for (const patch of patches) {
+  for (const p of patch.data.platforms) patchPlatforms.add(p);
+  statuses.add(patch.data.status);
+  origins.add(patch.data.origin);
+  coverage.subs.add(patch.data.subs);
+  coverage.graphics.add(patch.data.graphics);
+  coverage.dub.add(patch.data.dub);
+  if (patch.data.date) {
+    patchDates.push(patch.data.date);
+  }
+  for (const authorId of patch.data.authors) {
+    creators.add(authorId);
+  }
+  for (const circleId of patch.data.circles) {
+    creators.add(circleId);
+  }
+  for (const d of patch.data.downloads) {
+    patchRegions.add(d.region);
+    if (d.archive) boolFlags.archive = true;
+    downloadDates.push(d.date);
+  }
+  for (const pub of patch.data.publishers) patchPublishers.add(pub);
+  if (patch.data.lost_source) boolFlags.lost_source = true;
+  if (patch.data.lost_media) boolFlags.lost_media = true;
+  if (patch.data.official) boolFlags.official = true;
+  if (patch.data.mtl) boolFlags.mtl = true;
+  if (patch.data.external) boolFlags.external = true;
+}
+const patchTimestamps = patchDates.map((d) => d.getTime());
+const newestPatchTime = patchTimestamps.length ? Math.max(...patchTimestamps) : undefined;
+const oldestPatchTime = patchTimestamps.length ? Math.min(...patchTimestamps) : undefined;
+const newestDownloadTime = downloadDates.length ? Math.max(...downloadDates.map((d) => d.getTime())) : undefined;
+---
+
+<Base title={game.data.title} description={pageDescription} transitions icon={game.data.icon}>
+  <section class="flex flex-column gap-lg">
+    <GameHeader game={game} transition:persist transition:name={`game-header-${game.id}`} />
+    <PatchSelector game={game} selector={selector} />
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <GameSidebar game={game} transition:persist transition:name={`game-sidebar-${game.id}`} />
+  </aside>
+</Base>

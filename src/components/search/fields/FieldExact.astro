@@ -1,0 +1,22 @@
+---
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  name: string;
+  label: string;
+  id: string;
+  options: Option[];
+}
+
+const { name, label, id, options } = Astro.props as Props;
+---
+
+<div class="flex justify-between align-center">
+  <label for={id} class="muted">{label}</label>
+  <select class="bordered bg-frame padding-xs pointer action" name={name} id={id}>
+    {options.map((opt) => <option value={opt.value}>{opt.label}</option>)}
+  </select>
+</div>

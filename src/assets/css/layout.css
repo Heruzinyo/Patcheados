@@ -1,0 +1,19 @@
+/* Layout */
+main {
+  grid-template-areas: "aside" "section";
+}
+
+main > section {
+  grid-area: section;
+}
+
+main > aside {
+  grid-area: aside;
+}
+
+@media (min-width: 768px) {
+  main {
+    grid-template-columns: 1fr 320px;
+    grid-template-areas: "section aside";
+  }
+}

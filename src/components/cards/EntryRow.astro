@@ -1,0 +1,88 @@
+---
+export interface Badge {
+  label: string;
+  status?: string; // when set, renders as the highlighted status badge
+}
+
+export interface Props {
+  href: string;
+  mediaKind?: "icon" | "logo" | "pfp" | "banner" | "none";
+  mediaSrc?: string;
+  mediaAlt?: string;
+  title: string;
+  year?: string;
+  /** Secondary line under the title - creator names, e.g. */
+  metaLine?: string;
+  /** Role list line (credits sections) - rendered instead of/alongside metaLine */
+  roleLine?: string;
+  badges?: Badge[];
+  date?: string;
+}
+
+const {
+  href,
+  mediaKind = "icon",
+  mediaSrc,
+  mediaAlt = "",
+  title,
+  year,
+  metaLine,
+  roleLine,
+  badges = [],
+  date,
+} = Astro.props as Props;
+
+const hasMeta = Boolean(year || metaLine || roleLine || badges.length || date);
+---
+
+<a href={href} class="grid card-row gap-sm bordered bg-frame padding-sm align-center pointer action">
+  {
+    mediaKind !== "none" && (
+      <div
+        class:list={[
+          "wrapper bordered bg-body",
+          mediaKind === "logo" && "logo flex align-center justify-center",
+          mediaKind === "pfp" && "pfp",
+          mediaKind !== "logo" && mediaKind !== "pfp" && "icon",
+        ]}
+      >
+        {mediaSrc ? <img src={mediaSrc} alt={mediaAlt} loading="lazy" /> : null}
+      </div>
+    )
+  }
+
+  {
+    hasMeta ? (
+      <div class="flex flex-wrap justify-between align-center gap-sm min-w-0">
+        <div class="min-w-0">
+          <div>
+            <span class="target margin-right-xs">{title}</span>
+            {year && <small class="muted">{year}</small>}
+          </div>
+          {(metaLine || roleLine) && (
+            <div class="divider-v">
+              {metaLine && <span class="small muted">{metaLine}</span>}
+              {roleLine && <span class="small muted">{roleLine}</span>}
+            </div>
+          )}
+        </div>
+        {(badges.length > 0 || date) && (
+          <div class="flex flex-wrap align-center gap-sm min-w-0">
+            {badges.map((b) =>
+              b.status ? (
+                <span class={`bordered highlight ${b.status} bg-body padding-rect-xs small`}>{b.label}</span>
+              ) : (
+                <span class="bordered bg-body padding-rect-xs small">{b.label}</span>
+              )
+            )}
+            {date && <small class="muted">{date}</small>}
+          </div>
+        )}
+      </div>
+    ) : (
+      <div class="min-w-0">
+        <span class="target">{title}</span>
+      </div>
+    )
+  }
+</a>

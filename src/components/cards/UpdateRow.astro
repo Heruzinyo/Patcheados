@@ -1,0 +1,42 @@
+---
+import type { GameEntry, PatchEntry } from "../../lib/db";
+import { patchUrl } from "../../lib/url";
+import { displayTitle, statusClass, formatYear, formatDatePtBr, toLabel } from "../../lib/game";
+import { resolveCreatorNamesLabel } from "../../lib/credits";
+import { getVocab, vocabShort } from "../../lib/search/vocab";
+import EntryRow, { type Badge } from "./EntryRow.astro";
+
+interface Props {
+  game: GameEntry;
+  patch: PatchEntry;
+  latestDate?: Date | null;
+}
+
+const { game, patch, latestDate } = Astro.props as Props;
+
+const title = displayTitle(game, patch);
+const creatorLabel = await resolveCreatorNamesLabel(patch);
+const year = formatYear(game.data.date);
+const href = patchUrl(game, patch);
+const iconSrc = game.data.icon?.src;
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms");
+const statusesVocab = vocab.get("statuses");
+
+const badges: Badge[] = [
+  ...patch.data.platforms.map((p) => ({ label: vocabShort(platformsVocab, p) })),
+  { label: toLabel(statusesVocab, patch.data.status), status: statusClass(patch.data.status) },
+];
+---
+
+<EntryRow
+  href={href}
+  mediaKind="icon"
+  mediaSrc={iconSrc}
+  mediaAlt={title}
+  title={title}
+  year={year}
+  metaLine={creatorLabel}
+  badges={badges}
+  date={latestDate ? formatDatePtBr(latestDate) : undefined}
+/>

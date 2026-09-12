@@ -1,0 +1,15 @@
+bsd-3-clause:
+  label: "3-Clause BSD"
+  url: "https://opensource.org/license/bsd-3-clause"
+
+cc-by-nc-sa-4-0:
+  label: "CC-BY-NC-SA 4.0"
+  url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+
+gplv3:
+  label: "GPLv3"
+  url: "https://www.gnu.org/licenses/gpl-3.0.html"
+
+mit:
+  label: "MIT"
+  url: "https://opensource.org/license/mit"

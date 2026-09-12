@@ -1,0 +1,80 @@
+---
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import ThemeSwitch from "../components/layout/ThemeSwitch.astro";
+import FaviconSwitch from "../components/layout/FaviconSwitch.astro";
+import { ClientRouter } from "astro:transitions";
+import "../assets/css/main.css";
+
+interface Props {
+  title?: string;
+  /** Enables Astro soft navigation (view transitions), only pages that need
+   * seamless patch-switching (games/patches) opt in; everywhere else keeps
+   * plain full-page navigation. */
+  transitions?: boolean;
+  /** Per-page favicon override (e.g. a game's icon on games/patches pages).
+   * Falls back to the site default favicon when not provided. */
+  icon?: ImageMetadata;
+  /** Per-page meta description. Falls back to a site default when not provided. */
+  description?: string;
+}
+
+const {
+  title,
+  transitions = false,
+  icon,
+  description,
+} = Astro.props;
+const siteTitle = "Patcheados";
+const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const defaultIcon = "/favicon.ico";
+const defaultDescription = "O Patcheados é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos.";
+const pageDescription = description ?? defaultDescription;
+
+// Astro.site must be set in astro.config for this to resolve to an absolute
+// URL, which og:image / twitter:image require.
+const absoluteImageUrl = new URL("/og-image.jpg", Astro.site ?? Astro.url.origin).toString();
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr" data-theme="adastra">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={icon ? icon.src : defaultIcon} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={absoluteImageUrl} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={absoluteImageUrl} />
+
+    <ThemeSwitch />
+    <FaviconSwitch />
+    {transitions && <ClientRouter />}
+  </head>
+  <body class="flex flex-column">
+    <header>
+      <Header siteTitle={siteTitle} />
+    </header>
+    <main class="grid gap-lg padding-lg fill">
+      <slot />
+    </main>
+    <footer class="flex justify-between align-center bg-frame border-top padding-rect-sm">
+      <Footer />
+    </footer>
+  </body>
+</html>

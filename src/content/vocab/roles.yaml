@@ -1,0 +1,37 @@
+special-thanks: "Agradecimentos Especiais"
+animation: "Animação"
+art: "Arte"
+asm: "ASM"
+adaptation: "Adaptação"
+backing: "Apoio"
+collaboration: "Colaboração"
+compression: "Compressão"
+consulting: "Consultoria"
+cofounder: "Cofundador"
+qa: "Garantia de Qualidade" # Define o glossário/guia de estilo a partir das decisões do diretor, e acompanha a consistência dos tradutores e editores
+qc: "Controle de Qualidade" # Testa os aspectos de localização em contexto (exibição de texto, texto cortado/overflow, erros de tradução perceptíveis apenas em contexto)
+asset-conversion: "Conversão de Assets"
+director: "Direção" # Decisões gerais, estilo, escopo
+dub-director: "Direção de Dublagem"
+documentation: "Documentação"
+dub: "Dublagem"
+3d-editing: "Edição 3D"
+video-editing: "Edição de Vídeo"
+graphics-editing: "Edição Gráfica"
+revision: "Cotejo" # Compara o trabalho do tradutor com a versão original
+font-editing: "Edição de Fonte"
+supporting-cast: "Elenco de Apoio"
+tools: "Ferramentas"
+founder: "Fundação"
+modding: "Modding"
+mixing: "Mixagem"
+organization: "Organização"
+port: "Port"
+spokesperson: "Porta-Voz"
+programming: "Programação"
+proofreading: "Revisão" # Lê apenas o texto traduzido (sem comparar com o original) após o cotejo (caso haja), focando em legibilidade, fluidez natural, ortografia e gramática
+support: "Suporte"
+testing: "Testes" # Testa o patch como um todo (bugs, crashes, funcionalidade)
+translation: "Tradução"
+tuning: "Tuning"
+vocals: "Vocais"

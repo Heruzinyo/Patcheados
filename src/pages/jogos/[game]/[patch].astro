@@ -1,0 +1,277 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../../../layouts/Base.astro";
+import GameHeader from "../../../components/game/GameHeader.astro";
+import PatchSelector from "../../../components/game/PatchSelector.astro";
+import GameSidebar from "../../../components/game/GameSidebar.astro";
+import Downloads from "../../../components/game/Downloads.astro";
+import Credits from "../../../components/game/Credits.astro";
+import Gallery from "../../../components/game/Gallery.astro";
+import { getDb, gameIdForPatch, patchSlug } from "../../../lib/db";
+import { getPatchSelectorData, getPatchWarnings, toLabel, formatDatePtBr, displayTitle } from "../../../lib/game";
+import { getVocab, vocabUrl } from "../../../lib/search/vocab";
+import { renderMarkdownInline } from "../../../lib/markdown";
+
+export async function getStaticPaths() {
+  const patches = await getCollection("patches");
+  const db = await getDb();
+  return patches
+    .map((patch) => {
+      const game = db.gameById.get(gameIdForPatch(patch));
+      if (!game) return null;
+      return {
+        params: { game: game.id, patch: patchSlug(patch) },
+        props: { game, patch },
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+}
+
+const { game, patch } = Astro.props;
+const { Content } = await render(patch);
+
+const db = await getDb();
+const selector = await getPatchSelectorData(db, game);
+const warnings = getPatchWarnings(patch);
+
+const hasContent = patch.body && patch.body.trim().length > 0;
+const title = displayTitle(game, patch);
+
+// Creator names for the "por [creators]" title suffix, from ownership, not detailed credits[].
+const creatorNames = [...patch.data.authors, ...patch.data.circles]
+  .map((id) => db.authorById.get(id)?.data.title ?? db.circleById.get(id)?.data.title)
+  .filter((name): name is string => Boolean(name));
+const pageTitle = creatorNames.length > 0 ? `${title} por ${creatorNames.join(", ")}` : title;
+
+const pageDescription = patch.body
+  ? patch.body.replace(/\s+/g, " ").trim().slice(0, 155)
+  : `${title} no Patcheados.`;
+
+const vocab = await getVocab();
+const coverageVocab = vocab.get("coverage");
+const statusesVocab = vocab.get("statuses");
+const languagesVocab = vocab.get("languages");
+const platformsVocab = vocab.get("platforms");
+const licensesVocab = vocab.get("licenses");
+const licenseLabel = patch.data.license ? toLabel(licensesVocab, patch.data.license) : null;
+const licenseUrl = patch.data.license ? vocabUrl(licensesVocab, patch.data.license) : null;
+---
+
+<Base title={pageTitle} description={pageDescription} transitions icon={game.data.icon}>
+  <section class="flex flex-column gap-lg">
+    <GameHeader game={game} transition:persist transition:name={`game-header-${game.id}`} />
+    <PatchSelector game={game} selector={selector} currentPatch={patch} />
+
+    {
+      warnings.map((w) => (
+        <div class="bordered highlight border-accent">
+          <div class="bg-frame padding-rect-xs">
+            <strong>Aviso</strong>
+            <p>{w.text}</p>
+          </div>
+        </div>
+      ))
+    }
+
+    {
+      hasContent && (
+        <div class="bordered">
+          <div class="bg-frame border-bottom padding-sm">
+            <h2>Descrição do Patch</h2>
+          </div>
+          <div class="flex flex-column bg-body padding-md gap-sm">
+            <Content />
+          </div>
+        </div>
+      )
+    }
+
+    <Downloads patch={patch} />
+
+    {
+      patch.data.links.length > 0 && (
+        <div class="bordered">
+          <div class="bg-frame border-bottom padding-sm">
+            <h2>Recursos</h2>
+          </div>
+          <div class="bg-body padding-md">
+            <ul class="list divider-h">
+              {patch.data.links.map((link) => (
+                <li>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label ?? link.url}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+
+    <div class="grid grid-2col gap-lg">
+      {
+        patch.data.progress.length > 0 && (
+          <div class="bordered flex flex-column fill">
+            <div class="bg-frame border-bottom padding-sm">
+              <h2>Progresso</h2>
+            </div>
+            <div class="bg-body padding-md flex flex-column gap-sm">
+              {patch.data.progress.map((p) => (
+                <div>
+                  <div class="flex justify-between align-baseline">
+                    <span>{p.label}</span>
+                    <span class="small">{p.value}%</span>
+                  </div>
+                  <div class="bordered bg-frame bar">
+                    <div class="progress" style={`width: ${p.value}%`} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <div class:list={["bordered flex flex-column fill", patch.data.progress.length === 0 && "expand"]}>
+        <div class="bg-frame border-bottom padding-sm">
+          <h2>Detalhes do Patch</h2>
+        </div>
+        <div class="bg-body">
+          <table>
+            <tr>
+              <td class="muted">Legendas:</td>
+              <td>{toLabel(coverageVocab, patch.data.subs)}</td>
+            </tr>
+            <tr>
+              <td class="muted">Gráficos:</td>
+              <td>{toLabel(coverageVocab, patch.data.graphics)}</td>
+            </tr>
+            <tr>
+              <td class="muted">Dublagem:</td>
+              <td>{toLabel(coverageVocab, patch.data.dub)}</td>
+            </tr>
+            <tr>
+              <td class="muted">Status:</td>
+              <td>{toLabel(statusesVocab, patch.data.status)}</td>
+            </tr>
+            {
+              patch.data.date && (
+                <tr>
+                  <td class="muted">Lançamento:</td>
+                  <td>{formatDatePtBr(patch.data.date)}</td>
+                </tr>
+              )
+            }
+            {
+              patch.data.publishers.length > 0 && (
+                <tr>
+                  <td class="muted">Distribuidora:</td>
+                  <td>{patch.data.publishers.join(", ")}</td>
+                </tr>
+              )
+            }
+            <tr>
+              <td class="muted">Traduzido do:</td>
+              <td>
+                {toLabel(languagesVocab, patch.data.origin)}{patch.data.origin === game.data.language ? ' (Original)' : ''}
+              </td>
+            </tr>
+            <tr>
+              <td class="muted">Plataformas:</td>
+              <td>{patch.data.platforms.map((p) => toLabel(platformsVocab, p)).join(", ")}</td>
+            </tr>
+            {
+              (patch.data.license || patch.data.license_custom) && (
+                <tr>
+                  <td class="muted">Licença:</td>
+                  <td>
+                    {patch.data.license_custom
+                      ? <Fragment set:html={renderMarkdownInline(patch.data.license_custom.join(", "))} />
+                      : licenseUrl
+                        ? <a href={licenseUrl} target="_blank" rel="noopener noreferrer">{licenseLabel}</a>
+                        : licenseLabel}
+                  </td>
+                </tr>
+              )
+            }
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <Credits patch={patch} />
+
+    <Gallery screenshots={patch.data.screenshots} />
+
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Comentários</h2>
+      </div>
+      <div class="bg-body padding-md">
+        <div id="giscus-container" />
+        <script
+          is:inline
+          define:vars={{
+            repo: "Heruzinyo/Patcheados",
+            repoId: "R_kgDOQukMHQ",
+            category: "Patches",
+            categoryId: "DIC_kwDOQukMHc4C0ODo",
+            term: `${game.id}-${patchSlug(patch)}`,
+          }}
+        >
+          function getGiscusTheme() {
+            const value = getComputedStyle(document.documentElement)
+              .getPropertyValue("--giscus")
+              .trim();
+            return value || "preferred_color_scheme";
+          }
+
+          function mountGiscus() {
+            const container = document.getElementById("giscus-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            const script = document.createElement("script");
+            script.src = "https://giscus.app/client.js";
+            script.setAttribute("data-repo", repo);
+            script.setAttribute("data-repo-id", repoId);
+            script.setAttribute("data-category", category);
+            script.setAttribute("data-category-id", categoryId);
+            script.setAttribute("data-mapping", "specific");
+            script.setAttribute("data-term", term);
+            script.setAttribute("data-strict", "0");
+            script.setAttribute("data-reactions-enabled", "1");
+            script.setAttribute("data-emit-metadata", "0");
+            script.setAttribute("data-input-position", "bottom");
+            script.setAttribute("data-theme", getGiscusTheme());
+            script.setAttribute("data-lang", "pt");
+            script.setAttribute("crossorigin", "anonymous");
+            script.async = true;
+            container.appendChild(script);
+          }
+
+          // Pushes a live theme update to the already-mounted giscus iframe.
+          function updateGiscusTheme() {
+            const iframe = document.querySelector("iframe.giscus-frame");
+            if (!iframe) return;
+            iframe.contentWindow?.postMessage(
+              { giscus: { setConfig: { theme: getGiscusTheme() } } },
+              "https://giscus.app"
+            );
+          }
+
+          mountGiscus();
+
+          // ThemeSwitch.astro dispatches "themechange" on theme updates, reuse that instead of polling.
+          document.addEventListener("themechange", updateGiscusTheme);
+
+          // Soft navigation tears down and recreates #giscus-container, remount there too.
+          document.addEventListener("astro:after-swap", mountGiscus);
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <GameSidebar game={game} transition:persist transition:name={`game-sidebar-${game.id}`} />
+  </aside>
+</Base>

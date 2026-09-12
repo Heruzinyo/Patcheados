@@ -1,0 +1,45 @@
+---
+import type { GameEntry, PatchEntry } from "../../lib/db";
+import { patchUrl } from "../../lib/url";
+import { displayTitle, statusClass, formatYear, toLabel } from "../../lib/game";
+import { resolveCreatorNamesLabel } from "../../lib/credits";
+import { getVocab } from "../../lib/search/vocab";
+import { getEntry } from "astro:content";
+
+interface Props {
+  game: GameEntry;
+  patch: PatchEntry;
+}
+
+const { game, patch } = Astro.props as Props;
+
+const title = displayTitle(game, patch);
+const creatorLabel = await resolveCreatorNamesLabel(patch);
+const year = formatYear(game.data.date);
+const href = patchUrl(game, patch);
+const vocab = await getVocab();
+const statusesVocab = vocab.get("statuses");
+const bannerImage = game.data.grid?.src;
+---
+
+<a href={href} class="grid featured-card bordered bg-frame pointer action">
+  <div class="wrapper banner border-bottom">
+    {bannerImage && <img src={bannerImage} alt={title} loading="lazy" />}
+  </div>
+  <div class="card-body flex justify-between padding-sm">
+    <div class="card-title flex flex-column min-w-0">
+      <div class="min-w-0">
+        <span class="target margin-right-xs">{title}</span>
+        <small class="muted">{year}</small>
+      </div>
+      <div class="card-creator flex min-w-0 overflow-hidden align-baseline">
+        <span class="small muted">{creatorLabel}</span>
+      </div>
+    </div>
+    <div class="card-meta flex flex-column align-end justify-center">
+      <span class={`bordered highlight ${statusClass(patch.data.status)} bg-body padding-rect-xs small`}>
+        {toLabel(statusesVocab, patch.data.status)}
+      </span>
+    </div>
+  </div>
+</a>

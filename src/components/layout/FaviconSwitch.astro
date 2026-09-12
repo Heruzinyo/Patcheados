@@ -1,0 +1,21 @@
+---
+// Forces the browser to notice favicon changes across ClientRouter soft navigations,
+// some browsers cache the favicon per-tab and won't re-fetch it on a head morph alone.
+---
+
+<script>
+  function reapplyFavicon() {
+    const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    if (!link) return;
+
+    const href = link.getAttribute("href");
+    if (!href) return;
+
+    // Remove and re-insert the node; just mutating href doesn't reliably force a re-fetch.
+    const fresh = link.cloneNode(true) as HTMLLinkElement;
+    link.remove();
+    document.head.appendChild(fresh);
+  }
+
+  document.addEventListener("astro:after-swap", reapplyFavicon);
+</script>

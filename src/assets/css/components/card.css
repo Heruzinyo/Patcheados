@@ -1,0 +1,32 @@
+/* Card Row */
+.card-row {
+  grid-template-columns: auto 1fr;
+}
+
+.card-row.no-media {
+  grid-template-columns: 1fr auto;
+}
+
+@media (max-width: 1199px) {
+  .card-row.stack-mobile {
+    grid-template-columns: 1fr;
+  }
+
+  .card-row.stack-mobile .card-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Featured Card */
+.featured-card {
+  grid-template-rows: auto 1fr;
+}
+
+.featured-card .card-body {
+  align-items: stretch;
+}
+
+.featured-card .card-title {
+  justify-content: center;
+}

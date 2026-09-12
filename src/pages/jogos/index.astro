@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import ListingForm from "../../components/search/ListingForm.astro";
+import { gamesConfig } from "../../lib/search/configs";
+import { getVocab, vocabShort } from "../../lib/search/vocab";
+
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms") ?? {};
+// Serializable {slug: shortLabel} map - client engine has no Astro content access.
+const platformShortMap = Object.fromEntries(
+  Object.keys(platformsVocab).map((slug) => [slug, vocabShort(platformsVocab, slug)])
+);
+---
+
+<Base title="Jogos">
+  <section class="flex flex-column gap-lg" data-games-search>
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h1>Jogos</h1>
+      </div>
+      <div class="bg-body padding-md flex flex-column gap-md" data-games-results>
+      </div>
+      <nav class="flex flex-wrap justify-center bg-frame border-top padding-sm gap-lg" aria-label="Paginação" data-games-pagination>
+      </nav>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Buscar Jogos</h2>
+      </div>
+      <ListingForm config={gamesConfig} />
+    </div>
+  </aside>
+</Base>
+
+<script type="module" define:vars={{ __gamesConfig: gamesConfig, __gamesVocab: { platform: platformShortMap } }}>
+  window.__gamesSearchData = { config: __gamesConfig, vocab: __gamesVocab };
+</script>
+<script type="module">
+  import { initListing } from "../../lib/search/engine.ts";
+  const { config, vocab } = window.__gamesSearchData;
+  initListing(config, vocab);
+</script>
+<script type="module">
+  import "../../lib/search/suggest.ts";
+</script>

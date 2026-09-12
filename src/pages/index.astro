@@ -1,0 +1,89 @@
+---
+import Base from "../layouts/Base.astro";
+import PatchCard from "../components/cards/PatchCard.astro";
+import UpdateRow from "../components/cards/UpdateRow.astro";
+import { getDb, withGames } from "../lib/db";
+import { latestDownloadDate } from "../lib/game";
+import { getSiteStats } from "../lib/stats";
+
+const db = await getDb();
+
+// Featured - one in-memory pass instead of filtering per-patch.
+const featuredPatches = db.patches.filter((p) => p.data.featured);
+const featured = withGames(db, featuredPatches);
+
+// Recent updates - pair with games and compute latestDownloadDate in the same pass.
+const recentCandidates = db.patches.filter((p) => p.data.downloads.length > 0);
+const recentWithGame = withGames(db, recentCandidates)
+  .map(({ patch, game }) => ({ patch, game, latest: latestDownloadDate(patch) }))
+  .filter((x) => x.latest !== null)
+  .sort((a, b) => (b.latest as Date).getTime() - (a.latest as Date).getTime())
+  .slice(0, 10);
+
+const stats = await getSiteStats();
+---
+
+<Base>
+  <section class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Destaques</h2>
+      </div>
+      <div class="bg-body padding-md grid grid-2col gap-md">
+        {featured.map(({ patch, game }) => <PatchCard game={game} patch={patch} />)}
+      </div>
+    </div>
+
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Atualizações Recentes</h2>
+      </div>
+      <div class="bg-body padding-md flex flex-column gap-md">
+        {recentWithGame.map(({ patch, game, latest }) => <UpdateRow game={game} patch={patch} latestDate={latest} />)}
+      </div>
+    </div>
+  </section>
+
+  <aside class="flex flex-column gap-lg">
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h1>Patcheados</h1>
+      </div>
+      <div class="flex flex-column bg-body padding-md gap-sm">
+        <p>O Patcheados é um projeto dedicado a catalogar e preservar traduções brasileiras feitas por fãs para jogos.</p>
+        <p>
+          Este projeto é mantido pela comunidade. Você pode contribuir adicionando novos jogos/patches, atualizando informações ou participando das traduções em desenvolvimento.
+        </p>
+        <p>
+          Conteúdos relacionados a jogos e patches (como imagens, capturas de tela, nomes e arquivos distribuídos) pertencem aos seus respectivos criadores e autores originais. Esses materiais são utilizados apenas para fins informativos, de documentação e divulgação, sem qualquer finalidade comercial. Caso algum autor ou responsável pelo conteúdo se sinta prejudicado, o material poderá ser removido mediante solicitação.
+        </p>
+      </div>
+    </div>
+
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Estatísticas</h2>
+      </div>
+      <div class="bg-body">
+        <table>
+          <tr>
+            <td class="muted">Jogos</td>
+            <td>{stats.games}</td>
+          </tr>
+          <tr>
+            <td class="muted">Patches</td>
+            <td>{stats.patches}</td>
+          </tr>
+          <tr>
+            <td class="muted">Autores</td>
+            <td>{stats.authors}</td>
+          </tr>
+          <tr>
+            <td class="muted">Círculos</td>
+            <td>{stats.circles}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </aside>
+</Base>

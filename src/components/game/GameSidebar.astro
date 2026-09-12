@@ -1,0 +1,111 @@
+---
+import type { GameEntry } from "../../lib/db";
+import { toLabel, formatDatePtBr } from "../../lib/game";
+import { gamesListUrl } from "../../lib/url";
+import { getVocab } from "../../lib/search/vocab";
+
+interface Props {
+  game: GameEntry;
+}
+
+const { game } = Astro.props as Props;
+const coverSrc = game.data.grid?.src;
+const vocab = await getVocab();
+const platformsVocab = vocab.get("platforms");
+const regionsVocab = vocab.get("regions");
+const languagesVocab = vocab.get("languages");
+const tagsVocab = vocab.get("tags");
+---
+
+<div class="bordered">
+  <div class="wrapper banner">
+    {coverSrc && <img src={coverSrc} alt={`Capa de ${game.data.title}`} loading="lazy" />}
+  </div>
+</div>
+
+{
+  game.data.nsfw && (
+    <div class="bordered highlight border-accent">
+      <div class="bg-frame padding-rect-xs">
+        <strong>Aviso de Conteúdo</strong>
+        <p>Este jogo contém conteúdo adulto (NSFW) e pode não ser adequado para todas as idades.</p>
+      </div>
+    </div>
+  )
+}
+
+<div class="bordered">
+  <div class="bg-frame border-bottom padding-sm">
+    <h2>Detalhes do Jogo</h2>
+  </div>
+  <div class="bg-body">
+    <table>
+      <tr>
+        <td class="muted">Plataformas</td>
+        <td>{game.data.platforms.map((p) => toLabel(platformsVocab, p)).join(", ")}</td>
+      </tr>
+      <tr>
+        <td class="muted">Região</td>
+        <td>{game.data.regions.map((r) => toLabel(regionsVocab, r)).join(", ")}</td>
+      </tr>
+      <tr>
+        <td class="muted">Idioma Original</td>
+        <td>{toLabel(languagesVocab, game.data.language)}</td>
+      </tr>
+      <tr>
+        <td class="muted">Desenvolvedor</td>
+        <td>{game.data.developers.join(", ")}</td>
+      </tr>
+      <tr>
+        <td class="muted">Distribuidora</td>
+        <td>{game.data.publishers.join(", ")}</td>
+      </tr>
+      <tr>
+        <td class="muted">Lançamento</td>
+        <td>{formatDatePtBr(game.data.date)}</td>
+      </tr>
+      <tr>
+        <td class="muted">Versão</td>
+        <td>{game.data.version}</td>
+      </tr>
+      <tr>
+        <td class="muted">Jogadores</td>
+        <td>{game.data.players}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="bordered">
+  <div class="bg-frame border-bottom padding-sm">
+    <h2>Tags</h2>
+  </div>
+  <div class="bg-body padding-md flex flex-wrap gap-md">
+    {
+      game.data.tags.map((tag) => (
+        <a href={gamesListUrl({ tag })} class="bordered bg-frame padding-xs small pointer action target">
+          {toLabel(tagsVocab, tag)}
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+{
+  game.data.links.length > 0 && (
+    <div class="bordered">
+      <div class="bg-frame border-bottom padding-sm">
+        <h2>Links Externos</h2>
+      </div>
+      <div class="bg-body padding-md">
+        <ul class="list divider-h">
+          {game.data.links.map((link) => (
+            <li>
+              <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label ?? link.url}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}

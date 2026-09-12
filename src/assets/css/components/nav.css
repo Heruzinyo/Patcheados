@@ -1,0 +1,31 @@
+/* Nav */
+.nav-toggle-input {
+  display: none;
+}
+
+.nav-toggle-label {
+  display: none;
+  color: var(--accent);
+}
+
+.nav-toggle-label:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1199px) {
+  .nav-toggle-label {
+    display: block;
+  }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-toggle-input:checked ~ .nav-menu {
+    display: flex;
+  }
+}

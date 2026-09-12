@@ -1,0 +1,35 @@
+---
+// Must run before paint to avoid a flash of the wrong theme,
+// so this stays a plain inline <script> in <head>, not a deferred module.
+---
+
+<script is:inline>
+  (function () {
+    // Single source of truth for theme state; anything that needs to react
+    // (logo, dropdown, etc.) listens for "themechange" instead of reading
+    // localStorage/dataset directly.
+    function setTheme(theme) {
+      if (!theme) return;
+      document.documentElement.dataset.theme = theme;
+      window.localStorage.setItem("theme", theme);
+      document.dispatchEvent(new CustomEvent("themechange", { detail: { theme } }));
+    }
+
+    function applyStoredTheme() {
+      const theme = window.localStorage.getItem("theme");
+      if (theme) setTheme(theme);
+    }
+
+    // Exposed so other controls (footer dropdown, a future toggle, etc.) can reuse this logic.
+    window.setTheme = setTheme;
+
+    applyStoredTheme();
+
+    // Astro's client router morphs the document to match the new page's
+    // server-rendered markup, which never has data-theme on <html>, so every
+    // navigation wipes it. This script is also deduped by Astro after first load,
+    // so this listener is what reapplies the theme. astro:after-swap fires
+    // synchronously before paint, so there's still no flash.
+    document.addEventListener("astro:after-swap", applyStoredTheme);
+  })();
+</script>

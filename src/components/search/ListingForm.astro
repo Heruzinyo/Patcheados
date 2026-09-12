@@ -1,0 +1,113 @@
+---
+import type { ListingConfig, FieldDef } from "../../lib/search/configs";
+import { getVocabOptions } from "../../lib/search/vocab";
+import FieldMulti from "./fields/FieldMulti.astro";
+import FieldText from "./fields/FieldText.astro";
+import FieldExact from "./fields/FieldExact.astro";
+import FieldRange from "./fields/FieldRange.astro";
+
+interface Props {
+  config: ListingConfig;
+}
+
+const { config } = Astro.props as Props;
+
+function fieldId(name: string) {
+  return name.replace(/_/g, "-");
+}
+
+// Pre-fetch vocab once per referenced file, then build the exact plain-data
+// props each field needs to render, no JSX built here, since Astro's
+// frontmatter is plain TypeScript and can't return template markup itself.
+const vocabByName = new Map<string, { value: string; label: string }[]>();
+for (const field of config.fields) {
+  if (field.vocab && !vocabByName.has(field.vocab)) {
+    vocabByName.set(field.vocab, await getVocabOptions(field.vocab));
+  }
+}
+
+interface PreparedField {
+  field: FieldDef;
+  id: string;
+  multiOptions: { value: string; label: string }[];
+  exactOptions: { value: string; label: string }[];
+}
+
+const prepared: PreparedField[] = config.fields.map((field) => {
+  const multiOptions = field.kind === "multi" && field.vocab ? vocabByName.get(field.vocab) ?? [] : [];
+  const exactOptions =
+    field.kind === "exact"
+      ? field.vocab
+        ? [{ value: "", label: "Qualquer" }, ...(vocabByName.get(field.vocab) ?? [])]
+        : field.options ?? []
+      : [];
+  return { field, id: fieldId(field.name), multiOptions, exactOptions };
+});
+
+const preparedByName = new Map(prepared.map((p) => [p.field.name, p]));
+const rangeByPrefix = new Map((config.rangeFields ?? []).map((r) => [r.paramPrefix, r]));
+---
+
+<form class="bg-body padding-md flex flex-column gap-md">
+  <div class="flex flex-column">
+    <label for="search" class="muted">Pesquisa</label>
+    <input type="text" class="bordered bg-frame padding-xs" name="search" id="search" />
+  </div>
+  <div class="flex flex-column">
+    <label for="order" class="muted">Ordenar</label>
+    <select class="bordered bg-frame padding-xs pointer action" name="order" id="order"></select>
+  </div>
+
+  {
+    config.detailsGroups ? (
+      config.detailsGroups.map((group) => (
+        <details class="bordered bg-frame">
+          <summary class="padding-sm pointer action">{group.label}</summary>
+          <div class="bg-body border-top padding-sm flex flex-column gap-md">
+            {group.fieldNames.map((name) => {
+              if (name.startsWith("range:")) {
+                const r = rangeByPrefix.get(name.slice("range:".length));
+                if (!r) return null;
+                return <FieldRange paramPrefix={r.paramPrefix} label={r.label} />;
+              }
+              const p = preparedByName.get(name);
+              if (!p) return null;
+              return (
+                <>
+                  {p.field.kind === "multi" && (
+                    <FieldMulti name={p.field.name} label={p.field.label} id={p.id} options={p.multiOptions} />
+                  )}
+                  {p.field.kind === "text" && (
+                    <FieldText name={p.field.name} label={p.field.label} id={p.id} suggest={p.field.suggest} type={config.type} />
+                  )}
+                  {p.field.kind === "exact" && (
+                    <FieldExact name={p.field.name} label={p.field.label} id={p.id} options={p.exactOptions} />
+                  )}
+                </>
+              );
+            })}
+          </div>
+        </details>
+      ))
+    ) : (
+      <>
+        {prepared.map((p) => (
+          <>
+            {p.field.kind === "multi" && (
+              <FieldMulti name={p.field.name} label={p.field.label} id={p.id} options={p.multiOptions} />
+            )}
+            {p.field.kind === "text" && (
+              <FieldText name={p.field.name} label={p.field.label} id={p.id} suggest={p.field.suggest} type={config.type} />
+            )}
+            {p.field.kind === "exact" && (
+              <FieldExact name={p.field.name} label={p.field.label} id={p.id} options={p.exactOptions} />
+            )}
+          </>
+        ))}
+        {(config.rangeFields ?? []).map((r) => (
+          <FieldRange paramPrefix={r.paramPrefix} label={r.label} />
+        ))}
+      </>
+    )
+  }
+</form>

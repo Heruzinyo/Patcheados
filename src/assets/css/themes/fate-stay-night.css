@@ -1,0 +1,29 @@
+[data-theme="fate-stay-night"] {
+  /* Background */
+  --bg-page: #081222;
+  --bg-frame: #0e1c35;
+  --bg-body: #14243e;
+  
+  /* Text */
+  --text: #ffffff;
+
+  /* Muted */
+  --muted: #a6a6a6;
+  
+  /* Accent */
+  --accent: #73eaff;
+  
+  /* Border */
+  --border: #ffffff40;
+
+  /* Highlight */
+  --danger: #910a1a;
+  --warning: #e7ca84;
+  --success: #5ac780;
+  
+  /* Font */
+  --font: Noto Sans JP, sans-serif;
+
+  /* Giscus */
+  --giscus: cobalt;
+}
