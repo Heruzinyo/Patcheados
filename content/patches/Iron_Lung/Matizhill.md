@@ -23,7 +23,7 @@ credits:
     - "Jv132"
     - "ZeraaMan14"
   "Testes":
-    - "David"
+    - "Menino_David"
   "Tradução":
     - "ZeraaMan14"
 download:

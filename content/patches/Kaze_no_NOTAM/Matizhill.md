@@ -16,7 +16,7 @@ credits:
   "Direção":
     - "Jv132"
   "Edição 3D":
-    - "denpakei"
+    - "denpakei32"
   "Edição Gráfica":
     - "Jv132"
   "Modding":

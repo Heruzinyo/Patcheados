@@ -163,3 +163,5 @@ services:
     code: twitter
   "YouTube":
     code: youtube
+  "ModDB":
+    code: moddb
